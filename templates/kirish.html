@@ -1,0 +1,94 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kirish - Matematika Olami</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+    <div class="auth-page">
+        <div class="auth-container">
+            <div class="auth-left">
+                <div class="auth-left-content">
+                    <div class="sidebar-logo" style="margin-bottom: 40px;">
+                        <div class="logo-icon">
+                            <i class="fas fa-square-root-variable"></i>
+                        </div>
+                        <span class="logo-text" style="color: #fff;">MatematikaOlami</span>
+                    </div>
+                    <h1>Qaytib<br>kelganingizdan<br>xursandmiz!</h1>
+                    <p>Hisobingizga kiring va o'qishni davom eting</p>
+                    <div class="auth-features">
+                        <div class="auth-feature">
+                            <i class="fas fa-fire"></i>
+                            <span>Ketma-ket mashqni davom eting</span>
+                        </div>
+                        <div class="auth-feature">
+                            <i class="fas fa-star"></i>
+                            <span>Yutuqlaringizni ko'ring</span>
+                        </div>
+                        <div class="auth-feature">
+                            <i class="fas fa-users"></i>
+                            <span>Do'stlar bilan bellashing</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="auth-right">
+                <div class="auth-form-container">
+                    <h2>Hisobga kirish</h2>
+                    <p class="auth-subtitle">Davom etish uchun tizimga kiring</p>
+
+                    {% if xato %}
+                    <div class="auth-errors">
+                        <div class="auth-error-item">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <span>{{ xato }}</span>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {% if messages %}
+                    {% for message in messages %}
+                    <div class="auth-success">
+                        <i class="fas fa-check-circle"></i>
+                        <span>{{ message }}</span>
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+
+                    <form method="post" class="auth-form">
+                        {% csrf_token %}
+                        <div class="auth-field">
+                            <label for="username">Foydalanuvchi nomi</label>
+                            <div class="auth-input-wrapper">
+                                <i class="fas fa-user"></i>
+                                <input type="text" id="username" name="username" placeholder="Foydalanuvchi nomingiz" value="{{ username|default:'' }}" required>
+                            </div>
+                        </div>
+
+                        <div class="auth-field">
+                            <label for="parol">Parol</label>
+                            <div class="auth-input-wrapper">
+                                <i class="fas fa-lock"></i>
+                                <input type="password" id="parol" name="parol" placeholder="Parolingiz" required>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="auth-submit-btn">Kirish</button>
+                    </form>
+
+                    <div class="auth-footer">
+                        <span>Hisobingiz yo'qmi?</span>
+                        <a href="{% url 'royxatdan_otish' %}">Ro'yxatdan o'tish</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

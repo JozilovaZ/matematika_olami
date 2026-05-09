@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block title %}Darslar - Matematika Olami{% endblock %}
+
+{% block content %}
+            <!-- Qidiruv va filter -->
+            <section class="section">
+                <div class="dars-search-bar">
+                    <div class="dars-search-input-wrap">
+                        <i class="fas fa-search dars-search-icon"></i>
+                        <input type="text" id="darsQidiruv" class="dars-search-input" placeholder="Mavzularni qidiring...">
+                    </div>
+                    <button class="dars-cat-btn dars-cat-active">Barchasi</button>
+                </div>
+            </section>
+
+            <!-- Darslar grid -->
+            <section class="section">
+                <div class="darslar-grid">
+                    {% for dars in darslar %}
+                    <a href="{% url 'dars_detail' dars.pk %}" class="dars-card">
+                        <div class="dars-card-top">
+                            <div class="dars-card-subj">
+                                <span class="dars-icon" style="background: {{ dars.rang|default:'#f3f4f6' }};">{{ dars.icon }}</span>
+                                Dars {{ dars.raqam }}
+                            </div>
+                            {% if dars.holat == 'tugallangan' %}
+                            <span class="dars-badge done">Tugallangan</span>
+                            {% elif dars.holat == 'jarayonda' %}
+                            <span class="dars-badge progress">Jarayonda</span>
+                            {% else %}
+                            <span class="dars-badge locked">Qulflangan</span>
+                            {% endif %}
+                        </div>
+                        <h3 class="dars-card-title">{{ dars.nomi }}</h3>
+                        <p class="dars-card-desc">{{ dars.tavsif }}</p>
+                        <div class="dars-card-info">
+                            <span><i class="fas fa-clock"></i> {{ dars.davomiylik }}</span>
+                            <span><i class="fas fa-layer-group"></i> Mavzu</span>
+                        </div>
+                        <div class="dars-card-bottom">
+                            <span class="dars-card-meta">
+                                <i class="fas fa-book-open"></i> Matematika
+                            </span>
+                            <span class="dars-card-btn">Boshlash <i class="fas fa-arrow-right"></i></span>
+                        </div>
+                    </a>
+                    {% endfor %}
+                </div>
+            </section>
+
+            <!-- Pagination -->
+            <div class="pagination">
+                <button class="page-btn"><i class="fas fa-chevron-left"></i></button>
+                {% for p in sahifalar %}
+                <button class="page-btn {% if p == joriy_sahifa %}page-active{% endif %}">{{ p }}</button>
+                {% endfor %}
+                <button class="page-btn"><i class="fas fa-chevron-right"></i></button>
+            </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const input = document.getElementById('darsQidiruv');
+    const cards = document.querySelectorAll('.dars-card');
+    input.addEventListener('input', function() {
+        const qiymat = this.value.toLowerCase();
+        cards.forEach(function(card) {
+            const nomi = card.querySelector('h3').textContent.toLowerCase();
+            const tavsif = card.querySelector('p').textContent.toLowerCase();
+            card.style.display = (nomi.includes(qiymat) || tavsif.includes(qiymat)) ? '' : 'none';
+        });
+    });
+});
+</script>
+{% endblock %}
+
+{% block activity_title %}Darslar bo'yicha{% endblock %}
+
+{% block activity_content %}
+                <div class="activity-item">
+                    <div class="activity-dot" style="background: #4caf50;"></div>
+                    <span>{{ tugallangan }} ta dars tugallangan</span>
+                </div>
+                <div class="activity-item">
+                    <div class="activity-dot" style="background: #ff9800;"></div>
+                    <span>{{ jarayonda_soni }} ta dars jarayonda</span>
+                </div>
+                <div class="activity-item">
+                    <div class="activity-dot" style="background: #2196f3;"></div>
+                    <span>{{ qolgan }} ta dars qoldi</span>
+                </div>
+{% endblock %}

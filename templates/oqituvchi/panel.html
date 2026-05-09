@@ -1,0 +1,63 @@
+{% extends 'oqituvchi/base.html' %}
+
+{% block title %}O'qituvchi paneli - Matematika Olami{% endblock %}
+
+{% block content %}
+<div class="hero-banner">
+    <div class="hero-text">
+        <h1>O'qituvchi paneli</h1>
+        <p>Bu yerdan darslar, topshiriqlar, musobaqalar va barcha kontentni boshqarishingiz mumkin.</p>
+    </div>
+</div>
+
+{% if messages %}
+<div style="margin-bottom: 20px;">
+    {% for message in messages %}
+    <div style="padding: 12px 20px; border-radius: 12px; margin-bottom: 8px; background: {% if message.tags == 'success' %}#e8f5e9; color: #2e7d32;{% elif message.tags == 'error' %}#fce4ec; color: #c62828;{% else %}#e3f2fd; color: #1565c0;{% endif %}">
+        {{ message }}
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<section class="section">
+    <h2 class="section-title">Boshqaruv</h2>
+    <div class="topics-grid">
+        <a href="{% url 'oqituvchi_kategoriyalar' %}" class="topic-card" style="background: #e8f5e9; text-decoration: none;">
+            <div class="topic-icon"><i class="fas fa-folder" style="color: #4caf50;"></i></div>
+            <h3>Kategoriyalar</h3>
+            <p>{{ kategoriyalar_soni }} ta</p>
+        </a>
+        <a href="{% url 'oqituvchi_mavzular' %}" class="topic-card" style="background: #e3f2fd; text-decoration: none;">
+            <div class="topic-icon"><i class="fas fa-lightbulb" style="color: #2196f3;"></i></div>
+            <h3>Mavzular</h3>
+            <p>{{ mavzular_soni }} ta</p>
+        </a>
+        <a href="{% url 'oqituvchi_darslar' %}" class="topic-card" style="background: #fff3e0; text-decoration: none;">
+            <div class="topic-icon"><i class="fas fa-book" style="color: #ff9800;"></i></div>
+            <h3>Darslar</h3>
+            <p>{{ darslar_soni }} ta</p>
+        </a>
+        <a href="{% url 'oqituvchi_topshiriqlar' %}" class="topic-card" style="background: #fce4ec; text-decoration: none;">
+            <div class="topic-icon"><i class="fas fa-tasks" style="color: #e91e63;"></i></div>
+            <h3>Topshiriqlar</h3>
+            <p>{{ topshiriqlar_soni }} ta ({{ savollar_soni }} savol)</p>
+        </a>
+        <a href="{% url 'oqituvchi_musobaqalar' %}" class="topic-card" style="background: #f3e5f5; text-decoration: none;">
+            <div class="topic-icon"><i class="fas fa-trophy" style="color: #9c27b0;"></i></div>
+            <h3>Musobaqalar</h3>
+            <p>{{ musobaqalar_soni }} ta</p>
+        </a>
+        <div class="topic-card" style="background: #e0f2f1;">
+            <div class="topic-icon"><i class="fas fa-users" style="color: #009688;"></i></div>
+            <h3>O'quvchilar</h3>
+            <p>{{ oquvchilar_soni }} ta</p>
+        </div>
+        <div class="topic-card" style="background: #fff8e1;">
+            <div class="topic-icon"><i class="fas fa-clipboard-check" style="color: #ffc107;"></i></div>
+            <h3>Test natijalari</h3>
+            <p>{{ testlar_soni }} ta</p>
+        </div>
+    </div>
+</section>
+{% endblock %}

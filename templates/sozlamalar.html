@@ -1,0 +1,176 @@
+{% extends 'base.html' %}
+
+{% block title %}Sozlamalar - Matematika Olami{% endblock %}
+
+{% block content %}
+            <!-- Sarlavha -->
+            <div class="stat-page-header">
+                <div>
+                    <h1 class="stat-page-title">Sozlamalar</h1>
+                    <p class="stat-page-subtitle">Hisobingiz va ilovani sozlash</p>
+                </div>
+            </div>
+
+            <!-- Profil sozlamalari -->
+            <section class="section">
+                <h2 class="section-title">Profil ma'lumotlari</h2>
+                <div class="sozlama-card">
+                    <div class="sozlama-profil">
+                        <div class="sozlama-avatar">
+                            <i class="fas fa-user-circle"></i>
+                            <button class="sozlama-avatar-btn"><i class="fas fa-camera"></i></button>
+                        </div>
+                        <div class="sozlama-form">
+                            <div class="sozlama-row">
+                                <div class="sozlama-field">
+                                    <label>Ism</label>
+                                    <div class="sozlama-input">
+                                        <i class="fas fa-user"></i>
+                                        <span>{{ profil.ism }}</span>
+                                    </div>
+                                </div>
+                                <div class="sozlama-field">
+                                    <label>Familiya</label>
+                                    <div class="sozlama-input">
+                                        <i class="fas fa-user"></i>
+                                        <span>{{ profil.familiya }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="sozlama-row">
+                                <div class="sozlama-field">
+                                    <label>Email</label>
+                                    <div class="sozlama-input">
+                                        <i class="fas fa-envelope"></i>
+                                        <span>{{ profil.email }}</span>
+                                    </div>
+                                </div>
+                                <div class="sozlama-field">
+                                    <label>Yosh</label>
+                                    <div class="sozlama-input">
+                                        <i class="fas fa-birthday-cake"></i>
+                                        <span>{{ profil.yosh }} yosh</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="sozlama-row">
+                                <div class="sozlama-field">
+                                    <label>Sinf</label>
+                                    <div class="sozlama-input">
+                                        <i class="fas fa-graduation-cap"></i>
+                                        <span>{{ profil.sinf }}</span>
+                                    </div>
+                                </div>
+                                <div class="sozlama-field">
+                                    <label>Maktab</label>
+                                    <div class="sozlama-input">
+                                        <i class="fas fa-school"></i>
+                                        <span>{{ profil.maktab }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="btn-primary sozlama-save-btn">Tahrirlash</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- O'quv sozlamalari -->
+            <section class="section">
+                <h2 class="section-title">O'quv sozlamalari</h2>
+                <div class="sozlama-card">
+                    {% for sozlama in oquv_sozlamalari %}
+                    <div class="sozlama-item">
+                        <div class="sozlama-item-left">
+                            <div class="sozlama-item-icon" style="background: {{ sozlama.rang }}; color: {{ sozlama.icon_rang }};">
+                                <i class="fas fa-{{ sozlama.icon }}"></i>
+                            </div>
+                            <div class="sozlama-item-info">
+                                <h4>{{ sozlama.nomi }}</h4>
+                                <p>{{ sozlama.tavsif }}</p>
+                            </div>
+                        </div>
+                        <div class="sozlama-item-right">
+                            {% if sozlama.turi == 'toggle' %}
+                            <label class="sozlama-toggle">
+                                <input type="checkbox" {% if sozlama.qiymat_bool %}checked{% endif %}>
+                                <span class="sozlama-toggle-slider"></span>
+                            </label>
+                            {% elif sozlama.turi == 'select' %}
+                            <div class="sozlama-select">{{ sozlama.qiymat_text }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+
+            <!-- Bildirishnoma sozlamalari -->
+            <section class="section">
+                <h2 class="section-title">Bildirishnomalar</h2>
+                <div class="sozlama-card">
+                    {% for bildirishnoma in bildirishnomalar %}
+                    <div class="sozlama-item">
+                        <div class="sozlama-item-left">
+                            <div class="sozlama-item-icon" style="background: {{ bildirishnoma.rang }}; color: {{ bildirishnoma.icon_rang }};">
+                                <i class="fas fa-{{ bildirishnoma.icon }}"></i>
+                            </div>
+                            <div class="sozlama-item-info">
+                                <h4>{{ bildirishnoma.nomi }}</h4>
+                                <p>{{ bildirishnoma.tavsif }}</p>
+                            </div>
+                        </div>
+                        <div class="sozlama-item-right">
+                            <label class="sozlama-toggle">
+                                <input type="checkbox" {% if bildirishnoma.yoqilgan %}checked{% endif %}>
+                                <span class="sozlama-toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+
+            <!-- Ko'rinish sozlamalari -->
+            <section class="section">
+                <h2 class="section-title">Ko'rinish</h2>
+                <div class="sozlama-card">
+                    <div class="sozlama-tema-grid">
+                        {% for tema in temalar %}
+                        <div class="sozlama-tema-card {% if tema.tanlangan %}sozlama-tema-active{% endif %}" style="background: {{ tema.rang }};">
+                            <div class="sozlama-tema-preview" style="background: {{ tema.preview_rang }};"></div>
+                            <span>{{ tema.nomi }}</span>
+                            {% if tema.tanlangan %}
+                            <i class="fas fa-check-circle sozlama-tema-check"></i>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </section>
+
+            <!-- Xavfsizlik -->
+            <section class="section">
+                <h2 class="section-title">Xavfsizlik</h2>
+                <div class="sozlama-card">
+                    {% for xavfsizlik in xavfsizlik_sozlamalari %}
+                    <div class="sozlama-item sozlama-item-clickable">
+                        <div class="sozlama-item-left">
+                            <div class="sozlama-item-icon" style="background: {{ xavfsizlik.rang }}; color: {{ xavfsizlik.icon_rang }};">
+                                <i class="fas fa-{{ xavfsizlik.icon }}"></i>
+                            </div>
+                            <div class="sozlama-item-info">
+                                <h4>{{ xavfsizlik.nomi }}</h4>
+                                <p>{{ xavfsizlik.tavsif }}</p>
+                            </div>
+                        </div>
+                        <div class="sozlama-item-right">
+                            <i class="fas fa-chevron-right sozlama-arrow"></i>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+{% endblock %}
+
+{% block activity_title %}Hisob ma'lumotlari{% endblock %}

@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Matematika Olami{% endblock %}
+
+{% block content %}
+            <!-- Hero banner -->
+            <section class="hero-banner">
+                <div class="hero-text">
+                    <h1>Matematikani <br>zabt et!</h1>
+                    <p>Matematikaning qiziqarli dunyosiga sayohat qiling va o'z bilimlaringizni sinab ko'ring</p>
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'darslar' %}" class="btn-primary">Davom etish</a>
+                    {% else %}
+                    <a href="{% url 'royxatdan_otish' %}" class="btn-primary">Ro'yxatdan o'tish</a>
+                    {% endif %}
+                </div>
+                <div class="hero-image">
+                    <img src="https://avatars.mds.yandex.net/i?id=d28d1ce78dd19eed7edc3e4771bee2f24d9c2819-5449291-images-thumbs&n=13" alt="Lion" class="lion-img">
+                </div>
+            </section>
+
+            <!-- Ta'lim xaritasi -->
+            <section class="section">
+                <h2 class="section-title">Ta'lim xaritasi fanlari</h2>
+                <div class="darslar-grid">
+                    {% for mavzu in mavzular %}
+                    <a href="{% url 'topshiriqlar' %}" class="dars-card">
+                        <div class="dars-card-top">
+                            <div class="dars-card-subj">
+                                <span class="dars-icon" style="background: {{ mavzu.rang|default:'#f3f4f6' }};">{{ mavzu.icon }}</span>
+                                Mavzu {{ mavzu.raqam }}
+                            </div>
+                            <span class="dars-badge done">Fan</span>
+                        </div>
+                        <h3 class="dars-card-title">{{ mavzu.nomi }}</h3>
+                        <p class="dars-card-desc">{{ mavzu.tavsif }}</p>
+                        <div class="dars-card-info">
+                            <span><i class="fas fa-layer-group"></i> Mavzu</span>
+                            <span><i class="fas fa-book"></i> Matematika</span>
+                        </div>
+                        <div class="dars-card-bottom">
+                            <span class="dars-card-meta">
+                                <i class="fas fa-tasks"></i> Topshiriqlar
+                            </span>
+                            <span class="dars-card-btn">Boshlash <i class="fas fa-arrow-right"></i></span>
+                        </div>
+                    </a>
+                    {% endfor %}
+                </div>
+            </section>
+
+            <!-- Kuchsiz sohalar -->
+            <section class="section">
+                <h2 class="section-title">Kuchsiz sohalar</h2>
+                <div class="weak-areas">
+                    {% for soha in kuchsiz_sohalar %}
+                    <div class="weak-card">
+                        <div class="weak-header">
+                            <span class="weak-name">{{ soha.nomi }}</span>
+                            <span class="weak-percent">{{ soha.foiz }}%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: {{ soha.foiz }}%; background: {{ soha.rang }}"></div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+
+            <!-- Musobaqalar -->
+            <section class="section">
+                <div class="musobaqa-banner">
+                    <div class="musobaqa-banner-text">
+                        <span class="musobaqa-badge">&#127942; Musobaqa</span>
+                        <h2>Do'stlar bilan bellashing!</h2>
+                        <p>O'yinlarni tanlang, raqiblarga qarshi bellashing va reyting jadvalida o'z o'rningizni egallang</p>
+                        <a href="#" class="btn-primary">Qatnashish</a>
+                    </div>
+                    <div class="musobaqa-banner-img">
+                        <img src="{% static 'images/musobaqa.png' %}" alt="Musobaqa">
+                    </div>
+                </div>
+
+                <h2 class="section-title">O'yinlarni tanlang</h2>
+                <div class="musobaqa-grid">
+                    {% for musobaqa in musobaqalar %}
+                    <div class="musobaqa-card" style="background: {{ musobaqa.rang }}">
+                        <div class="musobaqa-icon">{{ musobaqa.icon }}</div>
+                        <h3>{{ musobaqa.nomi }}</h3>
+                        <p>{{ musobaqa.tavsif }}</p>
+                        <div class="musobaqa-meta">
+                            <span class="musobaqa-players">
+                                <i class="fas fa-users"></i> {{ musobaqa.qatnashchilar }}
+                            </span>
+                            <span class="musobaqa-level">{{ musobaqa.daraja }}</span>
+                        </div>
+                        <a href="{% url 'musobaqa_detail' musobaqa.pk %}" class="musobaqa-btn">Boshlash</a>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <h2 class="section-title">Reyting jadvali</h2>
+                <div class="reyting-table">
+                    {% for player in reyting %}
+                    <div class="reyting-row {% if forloop.first %}reyting-first{% endif %}">
+                        <span class="reyting-rank">{{ forloop.counter }}</span>
+                        <span class="reyting-medal">{{ player.medal }}</span>
+                        <div class="reyting-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <span class="reyting-name">{{ player.ism }}</span>
+                        <span class="reyting-score">{{ player.ball }} ball</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+{% endblock %}

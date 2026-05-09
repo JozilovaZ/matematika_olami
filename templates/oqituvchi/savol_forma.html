@@ -1,0 +1,72 @@
+{% extends 'oqituvchi/base.html' %}
+
+{% block title %}{{ sarlavha }} - O'qituvchi paneli{% endblock %}
+
+{% block content %}
+<div class="detail-nav">
+    {% if topshiriq %}
+    <a href="{% url 'oqituvchi_topshiriq_tahrirlash' topshiriq.pk %}" class="detail-back-btn">
+        <i class="fas fa-arrow-left"></i> {{ topshiriq.nomi }}
+    </a>
+    {% elif musobaqa %}
+    <a href="{% url 'oqituvchi_musobaqa_tahrirlash' musobaqa.pk %}" class="detail-back-btn">
+        <i class="fas fa-arrow-left"></i> {{ musobaqa.nomi }}
+    </a>
+    {% endif %}
+</div>
+
+<h1 class="section-title">{{ sarlavha }}</h1>
+
+<div style="background: #fff; border-radius: 16px; padding: 32px;">
+    <form method="post">
+        {% csrf_token %}
+        <div style="margin-bottom: 20px;">
+            <label style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; color: #333;">Savol matni</label>
+            <textarea name="savol_matni" rows="3" required
+                style="width: 100%; padding: 12px 16px; border: 2px solid #e0e0e0; border-radius: 12px; font-size: 14px; outline: none; resize: vertical;">{{ savol.savol_matni|default:'' }}</textarea>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+            <div>
+                <label style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; color: #333;">A variant</label>
+                <input type="text" name="variant_a" value="{{ savol.variant_a|default:'' }}" required
+                    style="width: 100%; padding: 12px 16px; border: 2px solid #e0e0e0; border-radius: 12px; font-size: 14px; outline: none;">
+            </div>
+            <div>
+                <label style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; color: #333;">B variant</label>
+                <input type="text" name="variant_b" value="{{ savol.variant_b|default:'' }}" required
+                    style="width: 100%; padding: 12px 16px; border: 2px solid #e0e0e0; border-radius: 12px; font-size: 14px; outline: none;">
+            </div>
+            <div>
+                <label style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; color: #333;">C variant</label>
+                <input type="text" name="variant_c" value="{{ savol.variant_c|default:'' }}" required
+                    style="width: 100%; padding: 12px 16px; border: 2px solid #e0e0e0; border-radius: 12px; font-size: 14px; outline: none;">
+            </div>
+            <div>
+                <label style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; color: #333;">D variant</label>
+                <input type="text" name="variant_d" value="{{ savol.variant_d|default:'' }}" required
+                    style="width: 100%; padding: 12px 16px; border: 2px solid #e0e0e0; border-radius: 12px; font-size: 14px; outline: none;">
+            </div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 20px; margin-bottom: 20px;">
+            <div>
+                <label style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; color: #333;">To'g'ri javob</label>
+                <select name="togri_javob"
+                    style="width: 100%; padding: 12px 16px; border: 2px solid #e0e0e0; border-radius: 12px; font-size: 14px; outline: none; background: #fff;">
+                    <option value="a" {% if savol.togri_javob == 'a' %}selected{% endif %}>A</option>
+                    <option value="b" {% if savol.togri_javob == 'b' %}selected{% endif %}>B</option>
+                    <option value="c" {% if savol.togri_javob == 'c' %}selected{% endif %}>C</option>
+                    <option value="d" {% if savol.togri_javob == 'd' %}selected{% endif %}>D</option>
+                </select>
+            </div>
+            <div>
+                <label style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; color: #333;">Izoh (ixtiyoriy)</label>
+                <input type="text" name="izoh" value="{{ savol.izoh|default:'' }}"
+                    style="width: 100%; padding: 12px 16px; border: 2px solid #e0e0e0; border-radius: 12px; font-size: 14px; outline: none;">
+            </div>
+        </div>
+        <button type="submit" class="btn-primary" style="border: none; cursor: pointer;">
+            <i class="fas fa-save"></i> Saqlash
+        </button>
+    </form>
+</div>
+{% endblock %}

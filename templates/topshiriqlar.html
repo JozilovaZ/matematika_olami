@@ -1,0 +1,154 @@
+{% extends 'base.html' %}
+
+{% block title %}Topshiriqlar - Matematika Olami{% endblock %}
+
+{% block content %}
+            <!-- Qidiruv va filter -->
+            <section class="section">
+                <div class="dars-search-bar">
+                    <div class="dars-search-input-wrap">
+                        <i class="fas fa-search dars-search-icon"></i>
+                        <input type="text" id="topshiriqQidiruv" class="dars-search-input" placeholder="Topshiriqlarni qidiring...">
+                    </div>
+                    <button class="dars-cat-btn dars-cat-active">Barchasi</button>
+                </div>
+            </section>
+
+            <!-- Mavzular bo'yicha topshiriqlar -->
+            {% for mt in mavzu_topshiriqlar %}
+            <section class="section">
+                <h2 style="margin-bottom:12px; font-size:1.1rem; color:#333;">
+                    <span style="background:{{ mt.mavzu.rang|default:'#e8f5e9' }}; padding:4px 10px; border-radius:8px;">
+                        {{ mt.mavzu.raqam }} - {{ mt.mavzu.nomi }}
+                    </span>
+                </h2>
+                <div class="darslar-grid">
+                    {% for top in mt.topshiriqlar %}
+                    <a href="{% url 'topshiriq_detail' top.pk %}" class="dars-card">
+                        <div class="dars-card-top">
+                            <div class="dars-card-subj">
+                                <span class="dars-icon" style="background: {{ top.rang|default:'#f3f4f6' }};">{{ top.icon|default:'📝' }}</span>
+                                Topshiriq
+                            </div>
+                            {% if top.foiz >= 100 %}
+                            <span class="dars-badge done">Tugallangan</span>
+                            {% elif top.foiz > 0 %}
+                            <span class="dars-badge progress">Jarayonda</span>
+                            {% else %}
+                            <span class="dars-badge locked">Yangi</span>
+                            {% endif %}
+                        </div>
+                        <h3 class="dars-card-title">{{ top.nomi }}</h3>
+                        <p class="dars-card-desc">{{ top.tavsif|default:"Bu topshiriq orqali bilimingizni sinab ko'ring." }}</p>
+                        <div class="dars-card-info">
+                            <span><i class="fas fa-question-circle"></i> {{ top.savollar }} ta savol</span>
+                            <span><i class="fas fa-chart-line"></i> {{ top.foiz }}%</span>
+                        </div>
+                        <div class="dars-card-bottom">
+                            <span class="dars-card-meta">
+                                <i class="fas fa-tasks"></i> {{ top.get_turi_display }}
+                            </span>
+                            <span class="dars-card-btn">Boshlash <i class="fas fa-arrow-right"></i></span>
+                        </div>
+                    </a>
+                    {% endfor %}
+                </div>
+            </section>
+            {% endfor %}
+
+            <!-- Mavzusiz topshiriqlar -->
+            {% if kichik_topshiriqlar or pastki_topshiriqlar %}
+            <section class="section">
+                {% if mavzu_topshiriqlar %}
+                <h2 style="margin-bottom:12px; font-size:1.1rem; color:#333;">Boshqa topshiriqlar</h2>
+                {% endif %}
+                <div class="darslar-grid">
+                    {% for top in kichik_topshiriqlar %}
+                    <a href="{% url 'topshiriq_detail' top.pk %}" class="dars-card">
+                        <div class="dars-card-top">
+                            <div class="dars-card-subj">
+                                <span class="dars-icon" style="background: {{ top.rang|default:'#f3f4f6' }};">{{ top.icon }}</span>
+                                Topshiriq
+                            </div>
+                            {% if top.foiz >= 100 %}
+                            <span class="dars-badge done">Tugallangan</span>
+                            {% elif top.foiz > 0 %}
+                            <span class="dars-badge progress">Jarayonda</span>
+                            {% else %}
+                            <span class="dars-badge locked">Yangi</span>
+                            {% endif %}
+                        </div>
+                        <h3 class="dars-card-title">{{ top.nomi }}</h3>
+                        <p class="dars-card-desc">{{ top.tavsif|default:"Bu topshiriq orqali bilimingizni sinab ko'ring." }}</p>
+                        <div class="dars-card-info">
+                            <span><i class="fas fa-question-circle"></i> {{ top.savollar }} ta savol</span>
+                            <span><i class="fas fa-chart-line"></i> {{ top.foiz }}%</span>
+                        </div>
+                        <div class="dars-card-bottom">
+                            <span class="dars-card-meta">
+                                <i class="fas fa-tasks"></i> Kichik topshiriq
+                            </span>
+                            <span class="dars-card-btn">Boshlash <i class="fas fa-arrow-right"></i></span>
+                        </div>
+                    </a>
+                    {% endfor %}
+
+                    {% for top in pastki_topshiriqlar %}
+                    <a href="{% url 'topshiriq_detail' top.pk %}" class="dars-card">
+                        <div class="dars-card-top">
+                            <div class="dars-card-subj">
+                                <span class="dars-icon" style="background: {{ top.rang|default:'#f3f4f6' }};">{{ top.icon|default:'📚' }}</span>
+                                Topshiriq
+                            </div>
+                            {% if top.foiz >= 100 %}
+                            <span class="dars-badge done">Tugallangan</span>
+                            {% elif top.foiz > 0 %}
+                            <span class="dars-badge progress">Jarayonda</span>
+                            {% else %}
+                            <span class="dars-badge locked">Yangi</span>
+                            {% endif %}
+                        </div>
+                        <h3 class="dars-card-title">{{ top.nomi }}</h3>
+                        <p class="dars-card-desc">{{ top.tavsif|default:"Bu topshiriq orqali bilimingizni sinab ko'ring." }}</p>
+                        <div class="dars-card-info">
+                            <span><i class="fas fa-question-circle"></i> {{ top.savollar }} ta savol</span>
+                            <span><i class="fas fa-chart-line"></i> {{ top.foiz }}%</span>
+                        </div>
+                        <div class="dars-card-bottom">
+                            <span class="dars-card-meta">
+                                <i class="fas fa-tasks"></i> Qo'shimcha topshiriq
+                            </span>
+                            <span class="dars-card-btn">Sinash <i class="fas fa-arrow-right"></i></span>
+                        </div>
+                    </a>
+                    {% endfor %}
+                </div>
+            </section>
+            {% endif %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const input = document.getElementById('topshiriqQidiruv');
+    const cards = document.querySelectorAll('.dars-card');
+    input.addEventListener('input', function() {
+        const qiymat = this.value.toLowerCase();
+        cards.forEach(function(card) {
+            const nomi = card.querySelector('h3').textContent.toLowerCase();
+            const tavsif = card.querySelector('p').textContent.toLowerCase();
+            card.style.display = (nomi.includes(qiymat) || tavsif.includes(qiymat)) ? '' : 'none';
+        });
+    });
+});
+</script>
+{% endblock %}
+
+{% block activity_title %}Topshiriqlar bo'yicha{% endblock %}
+
+{% block activity_content %}
+                {% for faoliyat in songgi_faoliyat %}
+                <div class="activity-item">
+                    <div class="activity-dot" style="background: {{ faoliyat.rang }};"></div>
+                    <span>{{ faoliyat.nomi }}</span>
+                </div>
+                {% endfor %}
+{% endblock %}

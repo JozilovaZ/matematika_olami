@@ -1,0 +1,152 @@
+{% extends 'base.html' %}
+
+{% block title %}Yutuqlar - Matematika Olami{% endblock %}
+
+{% block content %}
+            <!-- Sarlavha -->
+            <div class="stat-page-header">
+                <div>
+                    <h1 class="stat-page-title">Mening yutuqlarim</h1>
+                    <p class="stat-page-subtitle">O'z muvaffaqiyatlaringizni kuzatib boring</p>
+                </div>
+                <div class="stat-overall-badge">
+                    <i class="fas fa-trophy"></i>
+                    <span>{{ olingan_yutuqlar }}/{{ umumiy_yutuqlar }} yutuq</span>
+                </div>
+            </div>
+
+            <!-- Umumiy ko'rsatkichlar -->
+            <div class="stat-summary-grid">
+                <div class="stat-summary-card">
+                    <div class="stat-summary-icon" style="background: #fff3e0; color: #f0a500;">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <div class="stat-summary-info">
+                        <span class="stat-summary-value">{{ olingan_yutuqlar }}</span>
+                        <span class="stat-summary-label">Olingan yutuqlar</span>
+                    </div>
+                </div>
+                <div class="stat-summary-card">
+                    <div class="stat-summary-icon" style="background: #e8f5e9; color: #4caf50;">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div class="stat-summary-info">
+                        <span class="stat-summary-value">{{ umumiy_ball }}</span>
+                        <span class="stat-summary-label">Umumiy ball</span>
+                    </div>
+                </div>
+                <div class="stat-summary-card">
+                    <div class="stat-summary-icon" style="background: #fce4ec; color: #e91e63;">
+                        <i class="fas fa-fire"></i>
+                    </div>
+                    <div class="stat-summary-info">
+                        <span class="stat-summary-value">{{ ketma_ket_kun }} kun</span>
+                        <span class="stat-summary-label">Ketma-ket mashq</span>
+                    </div>
+                </div>
+                <div class="stat-summary-card">
+                    <div class="stat-summary-icon" style="background: #e3f2fd; color: #2196f3;">
+                        <i class="fas fa-gem"></i>
+                    </div>
+                    <div class="stat-summary-info">
+                        <span class="stat-summary-value">{{ daraja }}</span>
+                        <span class="stat-summary-label">Joriy daraja</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Daraja progressi -->
+            <section class="section">
+                <div class="yutuq-level-banner">
+                    <div class="yutuq-level-info">
+                        <div class="yutuq-level-icon">{{ daraja_icon }}</div>
+                        <div>
+                            <h3>{{ daraja }} darajasi</h3>
+                            <p>Keyingi darajaga {{ keyingi_daraja_ball }} ball kerak</p>
+                        </div>
+                    </div>
+                    <div class="yutuq-level-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: {{ daraja_foiz }}%; background: linear-gradient(90deg, #f5c542, #f0a500);"></div>
+                        </div>
+                        <div class="yutuq-level-numbers">
+                            <span>{{ joriy_ball }} ball</span>
+                            <span>{{ kerakli_ball }} ball</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Olingan yutuqlar -->
+            <section class="section">
+                <h2 class="section-title">Olingan yutuqlar</h2>
+                <div class="yutuq-grid">
+                    {% for yutuq in olinganlar %}
+                    <div class="yutuq-card yutuq-earned" style="background: {{ yutuq.rang }};">
+                        <div class="yutuq-badge-icon">{{ yutuq.icon }}</div>
+                        <h3>{{ yutuq.nomi }}</h3>
+                        <p>{{ yutuq.tavsif }}</p>
+                        <div class="yutuq-meta">
+                            <span class="yutuq-date"><i class="fas fa-calendar-check"></i> {{ yutuq.sana }}</span>
+                            <span class="yutuq-points"><i class="fas fa-star"></i> +{{ yutuq.ball }}</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+
+            <!-- Olinmagan yutuqlar -->
+            <section class="section">
+                <h2 class="section-title">Keyingi maqsadlar</h2>
+                <div class="yutuq-grid">
+                    {% for yutuq in olinmaganlar %}
+                    <div class="yutuq-card yutuq-locked" style="background: {{ yutuq.rang }};">
+                        <div class="yutuq-lock-overlay">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        <div class="yutuq-badge-icon">{{ yutuq.icon }}</div>
+                        <h3>{{ yutuq.nomi }}</h3>
+                        <p>{{ yutuq.tavsif }}</p>
+                        <div class="yutuq-progress-section">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: {{ yutuq.foiz }}%; background: {{ yutuq.progress_rang }};"></div>
+                            </div>
+                            <span class="yutuq-progress-text">{{ yutuq.foiz }}%</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+
+            <!-- Kunlik sovrinlar -->
+            <section class="section">
+                <div class="yutuq-daily-banner">
+                    <div class="yutuq-daily-header">
+                        <span class="musobaqa-badge">{{ kunlik_icon }} Kunlik sovrinlar</span>
+                    </div>
+                    <div class="yutuq-daily-grid">
+                        {% for kun in kunlik_sovrinlar %}
+                        <div class="yutuq-daily-card {% if kun.olingan %}yutuq-daily-earned{% endif %}">
+                            <div class="yutuq-daily-day">{{ kun.kun }}</div>
+                            <div class="yutuq-daily-icon">{{ kun.icon }}</div>
+                            <div class="yutuq-daily-points">+{{ kun.ball }}</div>
+                            {% if kun.olingan %}
+                            <i class="fas fa-check-circle yutuq-daily-check"></i>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </section>
+{% endblock %}
+
+{% block activity_title %}So'nggi yutuqlar{% endblock %}
+
+{% block activity_content %}
+                {% for yutuq in oxirgi_yutuqlar %}
+                <div class="activity-item">
+                    <div class="activity-dot" style="background: {{ yutuq.progress_rang|default:'#4caf50' }};"></div>
+                    <span>{{ yutuq.nomi }} - olingan</span>
+                </div>
+                {% endfor %}
+{% endblock %}

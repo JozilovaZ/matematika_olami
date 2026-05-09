@@ -1,0 +1,82 @@
+{% extends 'oqituvchi/base.html' %}
+
+{% block title %}{{ sarlavha }} - O'qituvchi paneli{% endblock %}
+
+{% block content %}
+<div class="detail-nav">
+    <a href="{% url 'oqituvchi_panel' %}" class="detail-back-btn">
+        <i class="fas fa-arrow-left"></i> O'qituvchi paneli
+    </a>
+</div>
+
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+    <h1 class="section-title" style="margin-bottom: 0;">{{ sarlavha }}</h1>
+    <a href="{% url qoshish_url %}" class="btn-primary" style="border: none; cursor: pointer;">
+        <i class="fas fa-plus"></i> Yangi qo'shish
+    </a>
+</div>
+
+{% if messages %}
+<div style="margin-bottom: 20px;">
+    {% for message in messages %}
+    <div style="padding: 12px 20px; border-radius: 12px; margin-bottom: 8px; background: {% if message.tags == 'success' %}#e8f5e9; color: #2e7d32;{% elif message.tags == 'error' %}#fce4ec; color: #c62828;{% else %}#e3f2fd; color: #1565c0;{% endif %}">
+        {{ message }}
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% if elementlar %}
+<div style="background: #fff; border-radius: 16px; overflow: hidden;">
+    <table style="width: 100%; border-collapse: collapse;">
+        <thead>
+            <tr style="background: #f5f0eb;">
+                <th style="padding: 14px 20px; text-align: left; font-size: 13px; font-weight: 600; color: #666;">#</th>
+                {% for ustun in ustunlar %}
+                <th style="padding: 14px 20px; text-align: left; font-size: 13px; font-weight: 600; color: #666;">{{ ustun }}</th>
+                {% endfor %}
+                <th style="padding: 14px 20px; text-align: right; font-size: 13px; font-weight: 600; color: #666;">Amallar</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for el in elementlar %}
+            <tr style="border-top: 1px solid #f0ebe5;">
+                <td style="padding: 14px 20px; font-size: 14px; color: #999;">{{ forloop.counter }}</td>
+                {% for maydon in maydonlar %}
+                <td style="padding: 14px 20px; font-size: 14px; color: #333;">
+                    {% if maydon == 'nomi' %}{{ el.nomi }}
+                    {% elif maydon == 'raqam' %}{{ el.raqam }}
+                    {% elif maydon == 'tartib' %}{{ el.tartib }}
+                    {% elif maydon == 'turi' %}{{ el.turi }}
+                    {% elif maydon == 'savollar' %}{{ el.savollar }}
+                    {% elif maydon == 'kategoriya' %}{{ el.kategoriya|default:"-" }}
+                    {% elif maydon == 'holat' %}{{ el.holat }}
+                    {% elif maydon == 'daraja' %}{{ el.daraja }}
+                    {% elif maydon == 'qatnashchilar' %}{{ el.qatnashchilar }}
+                    {% else %}{{ el|default:"-" }}
+                    {% endif %}
+                </td>
+                {% endfor %}
+                <td style="padding: 14px 20px; text-align: right;">
+                    <a href="{% url tahrirlash_url el.pk %}" style="color: #2196f3; margin-right: 12px; text-decoration: none; font-size: 14px;">
+                        <i class="fas fa-edit"></i> Tahrirlash
+                    </a>
+                    <form method="post" action="{% url ochirish_url el.pk %}" style="display: inline;" onsubmit="return confirm('Haqiqatan o\'chirmoqchimisiz?')">
+                        {% csrf_token %}
+                        <button type="submit" style="background: none; border: none; color: #e91e63; cursor: pointer; font-size: 14px;">
+                            <i class="fas fa-trash"></i> O'chirish
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div style="background: #fff; border-radius: 16px; padding: 60px; text-align: center;">
+    <i class="fas fa-inbox" style="font-size: 48px; color: #ccc; display: block; margin-bottom: 16px;"></i>
+    <p style="color: #999;">Hali hech narsa qo'shilmagan</p>
+</div>
+{% endif %}
+{% endblock %}

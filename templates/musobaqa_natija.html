@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+
+{% block title %}Natija - {{ musobaqa.nomi }}{% endblock %}
+
+{% block content %}
+            <!-- Orqaga -->
+            <div class="detail-nav">
+                <a href="{% url 'musobaqa_detail' musobaqa.pk %}" class="detail-back-btn">
+                    <i class="fas fa-redo"></i> Qayta yechish
+                </a>
+                <a href="{% url 'bosh_sahifa' %}" class="detail-back-btn">
+                    <i class="fas fa-home"></i> Bosh sahifa
+                </a>
+                <a href="{% url 'statistika' %}" class="detail-back-btn">
+                    <i class="fas fa-chart-bar"></i> Statistika
+                </a>
+            </div>
+
+            <!-- Natija banneri -->
+            <div class="natija-banner {% if foiz >= 80 %}natija-ajoyib{% elif foiz >= 50 %}natija-yaxshi{% else %}natija-yomon{% endif %}">
+                <div class="natija-icon">
+                    {% if foiz >= 80 %}🏆{% elif foiz >= 50 %}👍{% else %}💪{% endif %}
+                </div>
+                <h1>
+                    {% if foiz >= 80 %}Ajoyib natija!
+                    {% elif foiz >= 50 %}Yaxshi natija!
+                    {% else %}Mashq qiling!
+                    {% endif %}
+                </h1>
+                <div class="natija-stats">
+                    <div class="natija-stat">
+                        <span class="natija-stat-value">{{ togri_soni }}/{{ umumiy }}</span>
+                        <span class="natija-stat-label">To'g'ri javob</span>
+                    </div>
+                    <div class="natija-stat">
+                        <span class="natija-stat-value">{{ foiz }}%</span>
+                        <span class="natija-stat-label">Natija</span>
+                    </div>
+                </div>
+                <div class="progress-bar" style="max-width: 400px; margin: 16px auto 0;">
+                    <div class="progress-fill" style="width: {{ foiz }}%; background: {% if foiz >= 80 %}#4caf50{% elif foiz >= 50 %}#ff9800{% else %}#f44336{% endif %};"></div>
+                </div>
+            </div>
+
+            <!-- Top 10 reyting -->
+            {% if top10 %}
+            <section class="section">
+                <h2 class="section-title"><i class="fas fa-trophy" style="color: #f0a500;"></i> Top 10 natijalar</h2>
+                <div class="reyting-table">
+                    {% for player in top10 %}
+                    <div class="reyting-row {% if forloop.first %}reyting-first{% endif %}">
+                        <span class="reyting-rank">{{ player.orni }}</span>
+                        <span class="reyting-medal">
+                            {% if player.orni == 1 %}🥇{% elif player.orni == 2 %}🥈{% elif player.orni == 3 %}🥉{% endif %}
+                        </span>
+                        <div class="reyting-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <span class="reyting-name">{{ player.ism }}</span>
+                        <span class="reyting-score">{{ player.foiz }}%</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+            {% endif %}
+
+            <!-- Batafsil natijalar -->
+            {% for n in natijalar %}
+            <section class="section">
+                <div class="savol-card {% if n.togri %}savol-togri{% else %}savol-notogri{% endif %}">
+                    <div class="savol-header">
+                        <span class="savol-raqam">{{ forloop.counter }}-savol</span>
+                        {% if n.togri %}
+                        <span class="savol-status savol-status-togri"><i class="fas fa-check-circle"></i> To'g'ri</span>
+                        {% else %}
+                        <span class="savol-status savol-status-notogri"><i class="fas fa-times-circle"></i> Noto'g'ri</span>
+                        {% endif %}
+                    </div>
+                    <div class="savol-matn">
+                        <p>{{ n.savol.savol_matni }}</p>
+                    </div>
+                    <div class="savol-variantlar">
+                        <div class="savol-variant {% if n.savol.togri_javob == 'a' %}variant-togri{% elif n.javob == 'a' and n.javob != n.savol.togri_javob %}variant-notogri{% endif %}">
+                            <span class="variant-belgi">A</span>
+                            <span class="variant-matn">{{ n.savol.variant_a }}</span>
+                            {% if n.savol.togri_javob == 'a' %}<i class="fas fa-check variant-icon-togri"></i>{% endif %}
+                            {% if n.javob == 'a' and n.javob != n.savol.togri_javob %}<i class="fas fa-times variant-icon-notogri"></i>{% endif %}
+                        </div>
+                        <div class="savol-variant {% if n.savol.togri_javob == 'b' %}variant-togri{% elif n.javob == 'b' and n.javob != n.savol.togri_javob %}variant-notogri{% endif %}">
+                            <span class="variant-belgi">B</span>
+                            <span class="variant-matn">{{ n.savol.variant_b }}</span>
+                            {% if n.savol.togri_javob == 'b' %}<i class="fas fa-check variant-icon-togri"></i>{% endif %}
+                            {% if n.javob == 'b' and n.javob != n.savol.togri_javob %}<i class="fas fa-times variant-icon-notogri"></i>{% endif %}
+                        </div>
+                        <div class="savol-variant {% if n.savol.togri_javob == 'c' %}variant-togri{% elif n.javob == 'c' and n.javob != n.savol.togri_javob %}variant-notogri{% endif %}">
+                            <span class="variant-belgi">C</span>
+                            <span class="variant-matn">{{ n.savol.variant_c }}</span>
+                            {% if n.savol.togri_javob == 'c' %}<i class="fas fa-check variant-icon-togri"></i>{% endif %}
+                            {% if n.javob == 'c' and n.javob != n.savol.togri_javob %}<i class="fas fa-times variant-icon-notogri"></i>{% endif %}
+                        </div>
+                        <div class="savol-variant {% if n.savol.togri_javob == 'd' %}variant-togri{% elif n.javob == 'd' and n.javob != n.savol.togri_javob %}variant-notogri{% endif %}">
+                            <span class="variant-belgi">D</span>
+                            <span class="variant-matn">{{ n.savol.variant_d }}</span>
+                            {% if n.savol.togri_javob == 'd' %}<i class="fas fa-check variant-icon-togri"></i>{% endif %}
+                            {% if n.javob == 'd' and n.javob != n.savol.togri_javob %}<i class="fas fa-times variant-icon-notogri"></i>{% endif %}
+                        </div>
+                    </div>
+                    {% if n.savol.izoh %}
+                    <div class="savol-izoh">
+                        <i class="fas fa-lightbulb"></i>
+                        <span>{{ n.savol.izoh }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+            </section>
+            {% endfor %}
+{% endblock %}

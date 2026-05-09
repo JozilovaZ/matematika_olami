@@ -1,0 +1,162 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ro'yxatdan o'tish - Matematika Olami</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+    <div class="auth-page">
+        <div class="auth-container">
+            <div class="auth-left">
+                <div class="auth-left-content">
+                    <div class="sidebar-logo" style="margin-bottom: 40px;">
+                        <div class="logo-icon">
+                            <i class="fas fa-square-root-variable"></i>
+                        </div>
+                        <span class="logo-text" style="color: #fff;">MatematikaOlami</span>
+                    </div>
+                    <h1>Matematikani<br>zabt eting!</h1>
+                    <p>Ro'yxatdan o'ting va matematikaning qiziqarli dunyosiga sayohat qiling</p>
+                    <div class="auth-features">
+                        <div class="auth-feature">
+                            <i class="fas fa-book"></i>
+                            <span>100+ interaktiv darslar</span>
+                        </div>
+                        <div class="auth-feature">
+                            <i class="fas fa-tasks"></i>
+                            <span>1000+ mashq topshiriqlari</span>
+                        </div>
+                        <div class="auth-feature">
+                            <i class="fas fa-trophy"></i>
+                            <span>Yutuqlar va mukofotlar</span>
+                        </div>
+                        <div class="auth-feature">
+                            <i class="fas fa-chart-line"></i>
+                            <span>Batafsil statistika</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="auth-right">
+                <div class="auth-form-container">
+                    <h2>Ro'yxatdan o'tish</h2>
+                    <p class="auth-subtitle">Yangi hisob yarating va boshlang</p>
+
+                    {% if xatolar %}
+                    <div class="auth-errors">
+                        {% for xato in xatolar %}
+                        <div class="auth-error-item">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <span>{{ xato }}</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <form method="post" class="auth-form">
+                        {% csrf_token %}
+                        <div class="auth-form-row">
+                            <div class="auth-field">
+                                <label for="ism">Ism</label>
+                                <div class="auth-input-wrapper">
+                                    <i class="fas fa-user"></i>
+                                    <input type="text" id="ism" name="ism" placeholder="Ismingiz" value="{{ forma.ism|default:'' }}" required>
+                                </div>
+                            </div>
+                            <div class="auth-field">
+                                <label for="familiya">Familiya</label>
+                                <div class="auth-input-wrapper">
+                                    <i class="fas fa-user"></i>
+                                    <input type="text" id="familiya" name="familiya" placeholder="Familiyangiz" value="{{ forma.familiya|default:'' }}" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="auth-field">
+                            <label for="username">Foydalanuvchi nomi</label>
+                            <div class="auth-input-wrapper">
+                                <i class="fas fa-at"></i>
+                                <input type="text" id="username" name="username" placeholder="foydalanuvchi_nomi" value="{{ forma.username|default:'' }}" required>
+                            </div>
+                        </div>
+
+                        <div class="auth-field">
+                            <label for="email">Email</label>
+                            <div class="auth-input-wrapper">
+                                <i class="fas fa-envelope"></i>
+                                <input type="email" id="email" name="email" placeholder="email@misol.com" value="{{ forma.email|default:'' }}" required>
+                            </div>
+                        </div>
+
+                        <div class="auth-form-row">
+                            <div class="auth-field">
+                                <label for="yosh">Yosh</label>
+                                <div class="auth-input-wrapper">
+                                    <i class="fas fa-birthday-cake"></i>
+                                    <input type="number" id="yosh" name="yosh" placeholder="12" min="6" max="99" value="{{ forma.yosh|default:'12' }}">
+                                </div>
+                            </div>
+                            <div class="auth-field">
+                                <label for="sinf">Sinf</label>
+                                <div class="auth-input-wrapper">
+                                    <i class="fas fa-graduation-cap"></i>
+                                    <select id="sinf" name="sinf">
+                                        <option value="1-sinf">1-sinf</option>
+                                        <option value="2-sinf">2-sinf</option>
+                                        <option value="3-sinf">3-sinf</option>
+                                        <option value="4-sinf">4-sinf</option>
+                                        <option value="5-sinf">5-sinf</option>
+                                        <option value="6-sinf" selected>6-sinf</option>
+                                        <option value="7-sinf">7-sinf</option>
+                                        <option value="8-sinf">8-sinf</option>
+                                        <option value="9-sinf">9-sinf</option>
+                                        <option value="10-sinf">10-sinf</option>
+                                        <option value="11-sinf">11-sinf</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="auth-field">
+                            <label for="maktab">Maktab</label>
+                            <div class="auth-input-wrapper">
+                                <i class="fas fa-school"></i>
+                                <input type="text" id="maktab" name="maktab" placeholder="Maktab nomi" value="{{ forma.maktab|default:'' }}">
+                            </div>
+                        </div>
+
+                        <div class="auth-form-row">
+                            <div class="auth-field">
+                                <label for="parol">Parol</label>
+                                <div class="auth-input-wrapper">
+                                    <i class="fas fa-lock"></i>
+                                    <input type="password" id="parol" name="parol" placeholder="Kamida 6 belgi" required>
+                                </div>
+                            </div>
+                            <div class="auth-field">
+                                <label for="parol2">Parolni tasdiqlash</label>
+                                <div class="auth-input-wrapper">
+                                    <i class="fas fa-lock"></i>
+                                    <input type="password" id="parol2" name="parol2" placeholder="Parolni qaytaring" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="auth-submit-btn">Ro'yxatdan o'tish</button>
+                    </form>
+
+                    <div class="auth-footer">
+                        <span>Hisobingiz bormi?</span>
+                        <a href="{% url 'kirish' %}">Kirish</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

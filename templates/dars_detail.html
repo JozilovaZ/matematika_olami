@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ dars.nomi }} - Matematika Olami{% endblock %}
+
+{% block content %}
+            <!-- Orqaga tugmasi -->
+            <div class="detail-nav">
+                <a href="{% url 'darslar' %}" class="detail-back-btn">
+                    <i class="fas fa-arrow-left"></i> Darslar ro'yxati
+                </a>
+                <div class="detail-nav-arrows">
+                    {% if oldingi %}
+                    <a href="{% url 'dars_detail' oldingi.pk %}" class="detail-arrow-btn" title="{{ oldingi.nomi }}">
+                        <i class="fas fa-chevron-left"></i> Oldingi
+                    </a>
+                    {% endif %}
+                    {% if keyingi %}
+                    <a href="{% url 'dars_detail' keyingi.pk %}" class="detail-arrow-btn" title="{{ keyingi.nomi }}">
+                        Keyingi <i class="fas fa-chevron-right"></i>
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Dars sarlavhasi -->
+            <div class="dars-detail-header" style="background: {{ dars.rang }}">
+                <div class="dars-detail-icon">{{ dars.icon }}</div>
+                <div class="dars-detail-info">
+                    <span class="dars-detail-number">{{ dars.raqam }}-dars</span>
+                    <h1>{{ dars.nomi }}</h1>
+                    <p>{{ dars.tavsif }}</p>
+                    <div class="dars-detail-meta">
+                        <span><i class="fas fa-clock"></i> {{ dars.davomiylik }}</span>
+                        <span>
+                            {% if dars.holat == 'tugallangan' %}
+                            <i class="fas fa-check-circle" style="color: #4caf50;"></i> Tugallangan
+                            {% elif dars.holat == 'jarayonda' %}
+                            <i class="fas fa-spinner" style="color: #ff9800;"></i> Jarayonda
+                            {% else %}
+                            <i class="fas fa-lock" style="color: #ccc;"></i> Qulflangan
+                            {% endif %}
+                        </span>
+                        {% if dars.kategoriya %}
+                        <span><i class="fas fa-folder"></i> {{ dars.kategoriya.nomi }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dars mazmuni -->
+            <section class="section">
+                <div class="dars-detail-content">
+                    {{ dars.mazmun|safe }}
+                </div>
+            </section>
+
+            <!-- Topshiriqlar -->
+            {% if topshiriqlar %}
+            <section class="section">
+                <h2 class="section-title"><i class="fas fa-tasks"></i> Topshiriqlar</h2>
+                <div class="darslar-grid">
+                    {% for top in topshiriqlar %}
+                    <a href="{% url 'topshiriq_detail' top.pk %}" class="dars-card">
+                        <div class="dars-card-top">
+                            <div class="dars-card-subj">
+                                <span class="dars-icon" style="background: {{ top.rang|default:'#f3f4f6' }};">{{ top.icon|default:'📝' }}</span>
+                                Topshiriq
+                            </div>
+                            {% if top.foiz >= 100 %}
+                            <span class="dars-badge done">Tugallangan</span>
+                            {% elif top.foiz > 0 %}
+                            <span class="dars-badge progress">Jarayonda</span>
+                            {% else %}
+                            <span class="dars-badge locked">Yangi</span>
+                            {% endif %}
+                        </div>
+                        <h3 class="dars-card-title">{{ top.nomi }}</h3>
+                        <p class="dars-card-desc">{{ top.tavsif|default:"Bu topshiriq orqali bilimingizni sinab ko'ring." }}</p>
+                        <div class="dars-card-info">
+                            <span><i class="fas fa-question-circle"></i> {{ top.savollar }} ta savol</span>
+                            <span><i class="fas fa-chart-line"></i> {{ top.foiz }}%</span>
+                        </div>
+                        <div class="dars-card-bottom">
+                            <span class="dars-card-meta">
+                                <i class="fas fa-tasks"></i> {{ top.get_turi_display }}
+                            </span>
+                            <span class="dars-card-btn">Boshlash <i class="fas fa-arrow-right"></i></span>
+                        </div>
+                    </a>
+                    {% endfor %}
+                </div>
+            </section>
+            {% endif %}
+
+            <!-- Navigatsiya -->
+            <div class="dars-detail-footer">
+                {% if oldingi %}
+                <a href="{% url 'dars_detail' oldingi.pk %}" class="dars-footer-btn dars-footer-prev">
+                    <i class="fas fa-arrow-left"></i>
+                    <div>
+                        <span>Oldingi dars</span>
+                        <strong>{{ oldingi.nomi }}</strong>
+                    </div>
+                </a>
+                {% else %}
+                <div></div>
+                {% endif %}
+                {% if keyingi %}
+                <a href="{% url 'dars_detail' keyingi.pk %}" class="dars-footer-btn dars-footer-next">
+                    <div>
+                        <span>Keyingi dars</span>
+                        <strong>{{ keyingi.nomi }}</strong>
+                    </div>
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+                {% endif %}
+            </div>
+{% endblock %}
+
+{% block activity_title %}Dars haqida{% endblock %}
+
+{% block activity_content %}
+                <div class="activity-item">
+                    <div class="activity-dot" style="background: #4caf50;"></div>
+                    <span>{{ dars.raqam }}-dars</span>
+                </div>
+                <div class="activity-item">
+                    <div class="activity-dot" style="background: #2196f3;"></div>
+                    <span>{{ dars.davomiylik }}</span>
+                </div>
+                {% if dars.kategoriya %}
+                <div class="activity-item">
+                    <div class="activity-dot" style="background: #ff9800;"></div>
+                    <span>{{ dars.kategoriya.nomi }}</span>
+                </div>
+                {% endif %}
+{% endblock %}

@@ -1,0 +1,250 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Matematika Olami{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+    <!-- Mobil top bar -->
+    <header class="mobile-topbar">
+        <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menyu">
+            <i class="fas fa-bars"></i>
+        </button>
+        <div class="mobile-logo">
+            <div class="logo-icon" style="width:28px;height:28px;font-size:13px;">
+                <i class="fas fa-square-root-variable"></i>
+            </div>
+            <span>MatematikaOlami</span>
+        </div>
+        <div style="width:36px;"></div>
+    </header>
+
+    <!-- Mobil sidebar overlay -->
+    <div class="mobile-overlay" id="mobileOverlay"></div>
+
+    <div class="layout">
+        <!-- Chap sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <div class="logo-icon">
+                    <i class="fas fa-square-root-variable"></i>
+                </div>
+                <span class="logo-text">MatematikaOlami</span>
+            </div>
+
+            <div class="user-card">
+                <div class="user-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="user-info">
+                    {% if user.is_authenticated %}
+                    <span class="user-name">{{ user.first_name }} {{ user.last_name }}</span>
+                    <span class="user-role">{% if user.profil.rol == 'oqituvchi' %}O'qituvchi{% else %}O'quvchi{% endif %}</span>
+                    {% else %}
+                    <span class="user-name">Mehmon</span>
+                    <span class="user-role">Kirish kerak</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="{% url 'bosh_sahifa' %}" class="nav-item {% if request.resolver_match.url_name == 'bosh_sahifa' %}active{% endif %}">
+                    <i class="fas fa-home"></i>
+                    <span>Bosh sahifa</span>
+                </a>
+                <a href="{% url 'darslar' %}" class="nav-item {% if request.resolver_match.url_name == 'darslar' %}active{% endif %}">
+                    <i class="fas fa-book"></i>
+                    <span>Darslar</span>
+                </a>
+                <a href="{% url 'topshiriqlar' %}" class="nav-item {% if request.resolver_match.url_name == 'topshiriqlar' %}active{% endif %}">
+                    <i class="fas fa-tasks"></i>
+                    <span>Topshiriqlar</span>
+                </a>
+                <a href="{% url 'statistika' %}" class="nav-item {% if request.resolver_match.url_name == 'statistika' %}active{% endif %}">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Statistika</span>
+                </a>
+                <a href="{% url 'yutuqlar' %}" class="nav-item {% if request.resolver_match.url_name == 'yutuqlar' %}active{% endif %}">
+                    <i class="fas fa-trophy"></i>
+                    <span>Yutuqlar</span>
+                </a>
+                <a href="{% url 'sozlamalar' %}" class="nav-item {% if request.resolver_match.url_name == 'sozlamalar' %}active{% endif %}">
+                    <i class="fas fa-cog"></i>
+                    <span>Sozlamalar</span>
+                </a>
+                {% if user.is_authenticated and user.profil.rol == 'oqituvchi' %}
+                <div style="border-top: 1px solid #eee; margin: 12px 0;"></div>
+                <a href="{% url 'oqituvchi_panel' %}" class="nav-item {% if 'oqituvchi' in request.path %}active{% endif %}">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                    <span>O'qituvchi paneli</span>
+                </a>
+                {% endif %}
+            </nav>
+
+            <div class="user-actions">
+                {% if user.is_authenticated %}
+                <a href="{% url 'chiqish' %}" class="nav-item nav-item-logout">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Chiqish</span>
+                </a>
+                {% else %}
+                <a href="{% url 'kirish' %}" class="nav-item">
+                    <i class="fas fa-sign-in-alt"></i>
+                    <span>Kirish</span>
+                </a>
+                {% endif %}
+            </div>
+        </aside>
+
+        <!-- Asosiy kontent -->
+        <main class="main-content">
+            {% block content %}{% endblock %}
+        </main>
+
+        <!-- O'ng sidebar ochish tugmasi (yopilgan holatda ko'rinadi) -->
+        <button id="rightSidebarOpen" class="right-sidebar-open-btn" title="Profilni ochish" aria-label="Profilni ochish">
+            <i class="fas fa-user-circle"></i>
+        </button>
+
+        <!-- O'ng sidebar -->
+        <aside class="right-sidebar" id="rightSidebar">
+            <button id="rightSidebarClose" class="right-sidebar-close-btn" title="Yopish" aria-label="Yopish">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="profile-section">
+                <div class="profile-avatar">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <h3>Mening profilim</h3>
+            </div>
+
+            {% block right_sidebar %}
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-icon" style="background: #e8f5e9; color: #4caf50;">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-value">{{ stat.bajarilgan }}</span>
+                        <span class="stat-label">Bajarilgan</span>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon" style="background: #fff3e0; color: #ff9800;">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-value">{{ stat.jarayonda }}</span>
+                        <span class="stat-label">Jarayonda</span>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon" style="background: #e3f2fd; color: #2196f3;">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-value">{{ stat.ortacha_ball_foiz }}%</span>
+                        <span class="stat-label">O'rtacha ball</span>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon" style="background: #fce4ec; color: #e91e63;">
+                        <i class="fas fa-fire"></i>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-value">{{ stat.ketma_ket_kun }}</span>
+                        <span class="stat-label">Kun ketma-ket</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="recent-activity">
+                <h4>{% block activity_title %}So'nggi faoliyat{% endblock %}</h4>
+                {% block activity_content %}
+                {% for faoliyat in songgi_faoliyat %}
+                <div class="activity-item">
+                    <div class="activity-dot" style="background: {{ faoliyat.rang }};"></div>
+                    <span>{{ faoliyat.nomi }}</span>
+                </div>
+                {% endfor %}
+                {% endblock %}
+            </div>
+            {% endblock %}
+        </aside>
+    </div>
+
+    <!-- Mobil quyi navigatsiya -->
+    <nav class="mobile-bottom-nav">
+        <a href="{% url 'bosh_sahifa' %}" class="mob-nav-item {% if request.resolver_match.url_name == 'bosh_sahifa' %}mob-nav-active{% endif %}">
+            <i class="fas fa-home"></i><span>Bosh</span>
+        </a>
+        <a href="{% url 'darslar' %}" class="mob-nav-item {% if request.resolver_match.url_name == 'darslar' or request.resolver_match.url_name == 'dars_detail' %}mob-nav-active{% endif %}">
+            <i class="fas fa-book"></i><span>Darslar</span>
+        </a>
+        <a href="{% url 'topshiriqlar' %}" class="mob-nav-item {% if 'topshiriq' in request.resolver_match.url_name %}mob-nav-active{% endif %}">
+            <i class="fas fa-tasks"></i><span>Testlar</span>
+        </a>
+        <a href="{% url 'statistika' %}" class="mob-nav-item {% if request.resolver_match.url_name == 'statistika' %}mob-nav-active{% endif %}">
+            <i class="fas fa-chart-bar"></i><span>Statistika</span>
+        </a>
+        <a href="{% url 'sozlamalar' %}" class="mob-nav-item {% if request.resolver_match.url_name == 'sozlamalar' %}mob-nav-active{% endif %}">
+            <i class="fas fa-cog"></i><span>Sozlama</span>
+        </a>
+    </nav>
+
+    <script>
+    (function() {
+        const layout = document.querySelector('.layout');
+        const sidebar = document.getElementById('rightSidebar');
+        const closeBtn = document.getElementById('rightSidebarClose');
+        const openBtn = document.getElementById('rightSidebarOpen');
+        const STORAGE_KEY = 'rightSidebarHidden';
+
+        function setHidden(hidden) {
+            if (hidden) {
+                layout.classList.add('right-sidebar-hidden');
+                localStorage.setItem(STORAGE_KEY, '1');
+            } else {
+                layout.classList.remove('right-sidebar-hidden');
+                localStorage.removeItem(STORAGE_KEY);
+            }
+        }
+
+        if (localStorage.getItem(STORAGE_KEY) === '1') {
+            setHidden(true);
+        }
+
+        if (closeBtn) closeBtn.addEventListener('click', () => setHidden(true));
+        if (openBtn) openBtn.addEventListener('click', () => setHidden(false));
+    })();
+
+    // Mobil sidebar
+    (function() {
+        const menuBtn = document.getElementById('mobileMenuBtn');
+        const overlay = document.getElementById('mobileOverlay');
+        const sidebar = document.querySelector('.sidebar');
+
+        function openSidebar() {
+            sidebar.classList.add('mobile-sidebar-open');
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeSidebar() {
+            sidebar.classList.remove('mobile-sidebar-open');
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        if (menuBtn) menuBtn.addEventListener('click', openSidebar);
+        if (overlay) overlay.addEventListener('click', closeSidebar);
+    })();
+    </script>
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>

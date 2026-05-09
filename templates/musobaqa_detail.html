@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ musobaqa.nomi }} - Musobaqa{% endblock %}
+
+{% block content %}
+            <!-- Orqaga tugmasi -->
+            <div class="detail-nav">
+                <a href="{% url 'bosh_sahifa' %}" class="detail-back-btn">
+                    <i class="fas fa-arrow-left"></i> Bosh sahifa
+                </a>
+                <div class="detail-nav-arrows">
+                    <span class="topshiriq-savol-count">
+                        <i class="fas fa-list-ol"></i> {{ savollar.count }} ta savol
+                    </span>
+                </div>
+            </div>
+
+            <!-- Sarlavha -->
+            <div class="dars-detail-header" style="background: {{ musobaqa.rang }}">
+                <div class="dars-detail-icon">{{ musobaqa.icon }}</div>
+                <div class="dars-detail-info">
+                    <h1>{{ musobaqa.nomi }}</h1>
+                    <p>{{ musobaqa.tavsif }}</p>
+                    <div class="dars-detail-meta">
+                        <span><i class="fas fa-question-circle"></i> {{ savollar.count }} ta savol</span>
+                        <span><i class="fas fa-users"></i> {{ musobaqa.qatnashchilar }} qatnashchi</span>
+                        <span><i class="fas fa-signal"></i> {{ musobaqa.daraja }}</span>
+                    </div>
+                </div>
+            </div>
+
+            {% if savollar %}
+            <!-- Test formasi -->
+            <form method="post" action="{% url 'musobaqa_tekshirish' musobaqa.pk %}">
+                {% csrf_token %}
+
+                {% for savol in savollar %}
+                <section class="section">
+                    <div class="savol-card">
+                        <div class="savol-header">
+                            <span class="savol-raqam">{{ forloop.counter }}-savol</span>
+                        </div>
+                        <div class="savol-matn">
+                            <p>{{ savol.savol_matni }}</p>
+                        </div>
+                        <div class="savol-variantlar">
+                            <label class="savol-variant">
+                                <input type="radio" name="savol_{{ savol.pk }}" value="a" required>
+                                <span class="variant-belgi">A</span>
+                                <span class="variant-matn">{{ savol.variant_a }}</span>
+                            </label>
+                            <label class="savol-variant">
+                                <input type="radio" name="savol_{{ savol.pk }}" value="b">
+                                <span class="variant-belgi">B</span>
+                                <span class="variant-matn">{{ savol.variant_b }}</span>
+                            </label>
+                            <label class="savol-variant">
+                                <input type="radio" name="savol_{{ savol.pk }}" value="c">
+                                <span class="variant-belgi">C</span>
+                                <span class="variant-matn">{{ savol.variant_c }}</span>
+                            </label>
+                            <label class="savol-variant">
+                                <input type="radio" name="savol_{{ savol.pk }}" value="d">
+                                <span class="variant-belgi">D</span>
+                                <span class="variant-matn">{{ savol.variant_d }}</span>
+                            </label>
+                        </div>
+                    </div>
+                </section>
+                {% endfor %}
+
+                <div class="topshiriq-submit-section">
+                    <button type="submit" class="btn-primary topshiriq-submit-btn">
+                        <i class="fas fa-check"></i> Javoblarni tekshirish
+                    </button>
+                </div>
+            </form>
+            {% else %}
+            <section class="section">
+                <div class="savol-card">
+                    <p style="text-align: center; color: #999; padding: 40px;">
+                        <i class="fas fa-inbox" style="font-size: 48px; display: block; margin-bottom: 16px;"></i>
+                        Bu musobaqada hali savollar qo'shilmagan
+                    </p>
+                </div>
+            </section>
+            {% endif %}
+{% endblock %}
+
+{% block right_sidebar %}
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-icon" style="background: #e8f5e9; color: #4caf50;">
+                        <i class="fas fa-question-circle"></i>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-value">{{ savollar.count }}</span>
+                        <span class="stat-label">Savollar</span>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon" style="background: #fff3e0; color: #ff9800;">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-value">{{ musobaqa.qatnashchilar }}</span>
+                        <span class="stat-label">Qatnashchilar</span>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon" style="background: #e3f2fd; color: #2196f3;">
+                        <i class="fas fa-signal"></i>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-value">{{ musobaqa.daraja }}</span>
+                        <span class="stat-label">Daraja</span>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon" style="background: #fce4ec; color: #e91e63;">
+                        <i class="fas fa-fire"></i>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-value">{{ stat.ketma_ket_kun }}</span>
+                        <span class="stat-label">Kun ketma-ket</span>
+                    </div>
+                </div>
+            </div>
+
+            {% if top10 %}
+            <div class="reyting-table" style="margin-bottom: 20px;">
+                <h4 style="padding: 12px 16px; margin: 0; font-size: 15px;"><i class="fas fa-trophy" style="color: #f0a500;"></i> Top 10 natijalar</h4>
+                {% for player in top10 %}
+                <div class="reyting-row {% if forloop.first %}reyting-first{% endif %}">
+                    <span class="reyting-rank">{{ player.orni }}</span>
+                    <span class="reyting-medal">
+                        {% if player.orni == 1 %}🥇{% elif player.orni == 2 %}🥈{% elif player.orni == 3 %}🥉{% endif %}
+                    </span>
+                    <div class="reyting-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <span class="reyting-name">{{ player.ism }}</span>
+                    <span class="reyting-score">{{ player.foiz }}%</span>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <div class="recent-activity">
+                <h4>Maslahat</h4>
+                <div class="activity-item">
+                    <div class="activity-dot" style="background: #4caf50;"></div>
+                    <span>Tezkor va aniq javob bering</span>
+                </div>
+                <div class="activity-item">
+                    <div class="activity-dot" style="background: #2196f3;"></div>
+                    <span>Har bir savolni diqqat bilan o'qing</span>
+                </div>
+                <div class="activity-item">
+                    <div class="activity-dot" style="background: #ff9800;"></div>
+                    <span>Do'stlaringiz bilan raqobatlashing!</span>
+                </div>
+            </div>
+{% endblock %}

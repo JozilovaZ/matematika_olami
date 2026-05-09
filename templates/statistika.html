@@ -1,0 +1,432 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Statistika - Matematika Olami{% endblock %}
+
+{% block content %}
+            <!-- Sarlavha -->
+            <div class="stat-page-header">
+                <div>
+                    <h1 class="stat-page-title">O'quv natijalari tahlili</h1>
+                    <p class="stat-page-subtitle">Test natijalari, haftalik faoliyat va modullar bo'yicha natijalar</p>
+                </div>
+                <div class="stat-overall-badge">
+                    <i class="fas fa-chart-line"></i>
+                    <span>{{ ortacha_foiz }}% o'rtacha</span>
+                </div>
+            </div>
+
+            <!-- Umumiy statistika kartlari -->
+            <div class="stat-summary-grid">
+                <div class="stat-summary-card">
+                    <div class="stat-summary-icon" style="background: #e8f5e9; color: #4caf50;">
+                        <i class="fas fa-clipboard-check"></i>
+                    </div>
+                    <div class="stat-summary-info">
+                        <span class="stat-summary-value">{{ jami_testlar }}</span>
+                        <span class="stat-summary-label">Yechilgan testlar</span>
+                    </div>
+                </div>
+                <div class="stat-summary-card">
+                    <div class="stat-summary-icon" style="background: #fff3e0; color: #ff9800;">
+                        <i class="fas fa-percentage"></i>
+                    </div>
+                    <div class="stat-summary-info">
+                        <span class="stat-summary-value">{{ ortacha_foiz }}%</span>
+                        <span class="stat-summary-label">O'rtacha natija</span>
+                    </div>
+                </div>
+                <div class="stat-summary-card">
+                    <div class="stat-summary-icon" style="background: #e3f2fd; color: #2196f3;">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <div class="stat-summary-info">
+                        <span class="stat-summary-value">{{ jami_togri }}/{{ jami_savollar }}</span>
+                        <span class="stat-summary-label">To'g'ri javoblar</span>
+                    </div>
+                </div>
+                <div class="stat-summary-card">
+                    <div class="stat-summary-icon" style="background: #fce4ec; color: #e91e63;">
+                        <i class="fas fa-fire"></i>
+                    </div>
+                    <div class="stat-summary-info">
+                        <span class="stat-summary-value">{{ ketma_ket_kun }} kun</span>
+                        <span class="stat-summary-label">Ketma-ket mashq</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 1. HAFTALIK FAOLIYAT -->
+            <section class="section">
+                <h2 class="section-title">📅 Haftalik faoliyat</h2>
+                <p class="stat-chart-subtitle">Oxirgi 7 kun ichida yechilgan testlar soni va o'rtacha natija</p>
+                <div class="stat-chart-box">
+                    <canvas id="haftalikChart" height="110"></canvas>
+                </div>
+                <div class="stat-chart-container">
+                    {% for kun in haftalik_faoliyat %}
+                    <div class="stat-bar-wrapper">
+                        <span class="stat-bar-value">{{ kun.testlar }}</span>
+                        <div class="stat-bar-track">
+                            <div class="stat-bar-fill" style="height: {{ kun.foiz }}%;"></div>
+                        </div>
+                        <span class="stat-bar-label">{{ kun.kun }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+
+            <!-- 2. MODULLAR BO'YICHA NATIJA -->
+            <section class="section">
+                <h2 class="section-title">📚 Modullar bo'yicha natija</h2>
+                <p class="stat-chart-subtitle">Har bir kategoriya bo'yicha o'rtacha test foizi</p>
+                {% if modullar %}
+                <div class="stat-two-columns">
+                    <div class="stat-chart-box">
+                        <canvas id="modulChart" height="220"></canvas>
+                    </div>
+                    <div class="stat-modules-grid">
+                        {% for modul in modullar %}
+                        <div class="stat-module-card" style="background: {{ modul.rang }};">
+                            <div class="stat-module-icon">{{ modul.icon }}</div>
+                            <h3>{{ modul.nomi }}</h3>
+                            <div class="stat-module-score">{{ modul.ball }}%</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: {{ modul.ball }}%; background: {{ modul.progress_rang }};"></div>
+                            </div>
+                            <span class="stat-module-status">{{ modul.holat }} · {{ modul.urinishlar }} urinish</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% else %}
+                <div class="test-empty">
+                    <i class="fas fa-layer-group"></i>
+                    <h3>Kategoriyalar mavjud emas</h3>
+                </div>
+                {% endif %}
+            </section>
+
+            <!-- 3. NATIJALAR TRENDI -->
+            {% if oxirgi_natijalar %}
+            <section class="section">
+                <h2 class="section-title">📈 Natijalar trendi</h2>
+                <p class="stat-chart-subtitle">Oxirgi testlarda ko'rsatgan foizingiz</p>
+                <div class="stat-chart-box">
+                    <canvas id="trendChart" height="110"></canvas>
+                </div>
+            </section>
+            {% endif %}
+
+            <!-- 4. NATIJA TAQSIMOTI -->
+            {% if jami_testlar %}
+            <section class="section">
+                <h2 class="section-title">🎯 Natija taqsimoti</h2>
+                <p class="stat-chart-subtitle">Testlaringiz sifat bo'yicha qanday taqsimlangan</p>
+                <div class="stat-two-columns">
+                    <div class="stat-chart-box">
+                        <canvas id="taqsimotChart" height="220"></canvas>
+                    </div>
+                    <div class="stat-chart-box">
+                        <canvas id="javoblarChart" height="220"></canvas>
+                    </div>
+                </div>
+                <div class="stat-summary-grid" style="margin-top: 16px;">
+                    <div class="stat-summary-card">
+                        <div class="stat-summary-icon" style="background: #e8f5e9; color: #4caf50;">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="stat-summary-info">
+                            <span class="stat-summary-value">{{ ajoyib_soni }}</span>
+                            <span class="stat-summary-label">Ajoyib (80%+)</span>
+                        </div>
+                    </div>
+                    <div class="stat-summary-card">
+                        <div class="stat-summary-icon" style="background: #fff3e0; color: #ff9800;">
+                            <i class="fas fa-minus-circle"></i>
+                        </div>
+                        <div class="stat-summary-info">
+                            <span class="stat-summary-value">{{ yaxshi_soni }}</span>
+                            <span class="stat-summary-label">Yaxshi (50-79%)</span>
+                        </div>
+                    </div>
+                    <div class="stat-summary-card">
+                        <div class="stat-summary-icon" style="background: #ffebee; color: #f44336;">
+                            <i class="fas fa-times-circle"></i>
+                        </div>
+                        <div class="stat-summary-info">
+                            <span class="stat-summary-value">{{ yomon_soni }}</span>
+                            <span class="stat-summary-label">Yomon (&lt;50%)</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            {% endif %}
+
+            <!-- 5. TOPSHIRIQ BO'YICHA NATIJALAR -->
+            {% if topshiriq_stat %}
+            <section class="section">
+                <h2 class="section-title">📝 Topshiriqlar bo'yicha natijalar</h2>
+                <div class="test-stat-grid">
+                    {% for ts in topshiriq_stat %}
+                    <div class="test-stat-card">
+                        <div class="test-stat-header">
+                            <span class="test-stat-icon">{{ ts.topshiriq.icon }}</span>
+                            <div class="test-stat-info">
+                                <h4>{{ ts.topshiriq.nomi }}</h4>
+                                <span class="test-stat-count">{{ ts.urinishlar }} marta yechilgan</span>
+                            </div>
+                        </div>
+                        <div class="test-stat-scores">
+                            <div class="test-stat-score">
+                                <span class="test-stat-score-value">{{ ts.ortacha }}%</span>
+                                <span class="test-stat-score-label">O'rtacha</span>
+                            </div>
+                            <div class="test-stat-score">
+                                <span class="test-stat-score-value test-stat-best">{{ ts.eng_yaxshi }}%</span>
+                                <span class="test-stat-score-label">Eng yaxshi</span>
+                            </div>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: {{ ts.ortacha }}%; background: {% if ts.ortacha >= 80 %}#4caf50{% elif ts.ortacha >= 50 %}#ff9800{% else %}#f44336{% endif %};"></div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+            {% endif %}
+
+            <!-- 6. OXIRGI TEST NATIJALARI -->
+            {% if oxirgi_natijalar %}
+            <section class="section">
+                <h2 class="section-title">🕐 Oxirgi test natijalari</h2>
+                <div class="test-history-list">
+                    {% for natija in oxirgi_natijalar %}
+                    <div class="test-history-item">
+                        <div class="test-history-icon {% if natija.foiz >= 80 %}test-icon-ajoyib{% elif natija.foiz >= 50 %}test-icon-yaxshi{% else %}test-icon-yomon{% endif %}">
+                            {% if natija.foiz >= 80 %}<i class="fas fa-check-circle"></i>
+                            {% elif natija.foiz >= 50 %}<i class="fas fa-minus-circle"></i>
+                            {% else %}<i class="fas fa-times-circle"></i>{% endif %}
+                        </div>
+                        <div class="test-history-info">
+                            <h4>{{ natija.topshiriq.nomi }}</h4>
+                            <span class="test-history-date">{{ natija.sana|date:"d.m.Y H:i" }}</span>
+                        </div>
+                        <div class="test-history-result">
+                            <span class="test-history-score {% if natija.foiz >= 80 %}score-ajoyib{% elif natija.foiz >= 50 %}score-yaxshi{% else %}score-yomon{% endif %}">{{ natija.foiz }}%</span>
+                            <span class="test-history-detail">{{ natija.togri_soni }}/{{ natija.umumiy_soni }} to'g'ri</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+            {% endif %}
+
+            {% if not oxirgi_natijalar and not topshiriq_stat %}
+            <section class="section">
+                <div class="test-empty">
+                    <i class="fas fa-clipboard-list"></i>
+                    <h3>Hali test yechilmagan</h3>
+                    <p>Topshiriqlarni yechib, natijalaringizni bu yerda kuzating</p>
+                    <a href="{% url 'topshiriqlar' %}" class="btn-primary">Topshiriqlarni boshlash</a>
+                </div>
+            </section>
+            {% endif %}
+
+            <!-- 7. YUTUQLAR -->
+            {% if yutuqlar %}
+            <section class="section">
+                <h2 class="section-title">🏆 Olingan yutuqlar</h2>
+                <div class="stat-achievements-list">
+                    {% for yutuq in yutuqlar %}
+                    <div class="stat-achievement-card" style="background: {{ yutuq.rang }};">
+                        <div class="stat-achievement-icon">{{ yutuq.icon }}</div>
+                        <div class="stat-achievement-info">
+                            <h4>{{ yutuq.nomi }}</h4>
+                            <p>{{ yutuq.tavsif }}</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+            {% endif %}
+
+            <!-- 8. OTA-ONALAR BURCHAGI -->
+            {% if ota_ona_maslahatlar %}
+            <section class="section">
+                <div class="stat-parents-banner">
+                    <div class="stat-parents-header">
+                        <span class="stat-parents-badge"><i class="fas fa-users"></i> Ota-onalar burchagi</span>
+                    </div>
+                    <div class="stat-parents-grid">
+                        {% for maslahat in ota_ona_maslahatlar %}
+                        <div class="stat-parent-card" style="background: {{ maslahat.rang }};">
+                            <div class="stat-parent-icon">{{ maslahat.icon }}</div>
+                            <h4>{{ maslahat.nomi }}</h4>
+                            <p>{{ maslahat.tavsif }}</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </section>
+            {% endif %}
+{% endblock %}
+
+{% block right_sidebar %}
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-icon" style="background: #e8f5e9; color: #4caf50;">
+                        <i class="fas fa-clipboard-check"></i>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-value">{{ jami_testlar }}</span>
+                        <span class="stat-label">Testlar</span>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon" style="background: #fff3e0; color: #ff9800;">
+                        <i class="fas fa-percentage"></i>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-value">{{ ortacha_foiz }}%</span>
+                        <span class="stat-label">O'rtacha</span>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon" style="background: #e3f2fd; color: #2196f3;">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-value">{{ jami_togri }}</span>
+                        <span class="stat-label">To'g'ri</span>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon" style="background: #fce4ec; color: #e91e63;">
+                        <i class="fas fa-fire"></i>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-value">{{ ketma_ket_kun }}</span>
+                        <span class="stat-label">Kun ketma-ket</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="recent-activity">
+                <h4>Oxirgi natijalar</h4>
+                {% for natija in oxirgi_natijalar|slice:":5" %}
+                <div class="activity-item">
+                    <div class="activity-dot" style="background: {% if natija.foiz >= 80 %}#4caf50{% elif natija.foiz >= 50 %}#ff9800{% else %}#f44336{% endif %};"></div>
+                    <span>{{ natija.topshiriq.nomi }} - {{ natija.foiz }}%</span>
+                </div>
+                {% empty %}
+                <div class="activity-item">
+                    <div class="activity-dot" style="background: #ccc;"></div>
+                    <span>Hali test yechilmagan</span>
+                </div>
+                {% endfor %}
+            </div>
+{% endblock %}
+
+{% block extra_scripts %}
+{{ chart|json_script:"chart-data" }}
+<script>
+(function () {
+    const raw = document.getElementById('chart-data');
+    let data = {};
+    try { data = JSON.parse(raw.textContent); } catch (e) { data = {}; }
+
+    const palitra = ['#4caf50', '#ff9800', '#2196f3', '#e91e63', '#9c27b0', '#00bcd4', '#ffc107', '#3f51b5'];
+    const umumiy = { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } };
+
+    // 1. Haftalik faoliyat
+    const h = document.getElementById('haftalikChart');
+    if (h && data.haftalik_labels) {
+        new Chart(h, {
+            type: 'bar',
+            data: {
+                labels: data.haftalik_labels,
+                datasets: [
+                    { label: 'Testlar soni', data: data.haftalik_testlar, backgroundColor: '#4caf50', borderRadius: 8, yAxisID: 'y' },
+                    { label: "O'rtacha %", data: data.haftalik_ortacha, type: 'line', borderColor: '#ff9800', backgroundColor: '#ff9800', tension: 0.3, yAxisID: 'y1' }
+                ]
+            },
+            options: {
+                ...umumiy,
+                scales: {
+                    y: { beginAtZero: true, position: 'left', title: { display: true, text: 'Testlar' } },
+                    y1: { beginAtZero: true, max: 100, position: 'right', title: { display: true, text: 'Foiz' }, grid: { drawOnChartArea: false } }
+                }
+            }
+        });
+    }
+
+    // 2. Modullar bo'yicha (radar)
+    const m = document.getElementById('modulChart');
+    if (m && data.modul_labels && data.modul_labels.length) {
+        new Chart(m, {
+            type: 'radar',
+            data: {
+                labels: data.modul_labels,
+                datasets: [{
+                    label: "O'rtacha foiz",
+                    data: data.modul_ballar,
+                    backgroundColor: 'rgba(76, 175, 80, 0.25)',
+                    borderColor: '#4caf50',
+                    pointBackgroundColor: data.modul_ranglar
+                }]
+            },
+            options: { ...umumiy, scales: { r: { beginAtZero: true, max: 100 } } }
+        });
+    }
+
+    // 3. Natijalar trendi
+    const t = document.getElementById('trendChart');
+    if (t && data.trend_labels && data.trend_labels.length) {
+        new Chart(t, {
+            type: 'line',
+            data: {
+                labels: data.trend_labels,
+                datasets: [{
+                    label: 'Foiz',
+                    data: data.trend_foizlar,
+                    borderColor: '#2196f3',
+                    backgroundColor: 'rgba(33, 150, 243, 0.15)',
+                    fill: true,
+                    tension: 0.3,
+                    pointBackgroundColor: data.trend_foizlar.map(v => v >= 80 ? '#4caf50' : v >= 50 ? '#ff9800' : '#f44336'),
+                    pointRadius: 5
+                }]
+            },
+            options: { ...umumiy, scales: { y: { beginAtZero: true, max: 100 } } }
+        });
+    }
+
+    // 4. Natija taqsimoti
+    const tq = document.getElementById('taqsimotChart');
+    if (tq && data.taqsimot) {
+        new Chart(tq, {
+            type: 'doughnut',
+            data: {
+                labels: ['Ajoyib (80%+)', "Yaxshi (50-79%)", 'Yomon (<50%)'],
+                datasets: [{ data: data.taqsimot, backgroundColor: ['#4caf50', '#ff9800', '#f44336'] }]
+            },
+            options: { ...umumiy, plugins: { ...umumiy.plugins, title: { display: true, text: 'Test sifati' } } }
+        });
+    }
+
+    // Javoblar doughnut
+    const jv = document.getElementById('javoblarChart');
+    if (jv && data.javoblar) {
+        new Chart(jv, {
+            type: 'doughnut',
+            data: {
+                labels: ["To'g'ri javoblar", "Noto'g'ri javoblar"],
+                datasets: [{ data: data.javoblar, backgroundColor: ['#2196f3', '#ffcdd2'] }]
+            },
+            options: { ...umumiy, plugins: { ...umumiy.plugins, title: { display: true, text: 'Savollarga javob' } } }
+        });
+    }
+})();
+</script>
+{% endblock %}
