@@ -2297,6 +2297,58 @@ body {
     display: block;
 }
 
+/* Teacher card (tc) system */
+.tc-card {
+    display: flex;
+    flex-direction: column;
+    padding: 0 !important;
+    overflow: hidden;
+}
+.tc-body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 1rem;
+    text-decoration: none;
+    color: inherit;
+    transition: background 0.15s;
+}
+.tc-body:hover {
+    background: #fafafa;
+}
+.tc-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    background: #f5f3f0;
+    border-top: 1px solid #ede9e3;
+}
+.tc-actions form {
+    display: flex;
+    margin-left: auto;
+}
+.tc-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    font-size: 13px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    transition: filter 0.15s, transform 0.1s;
+}
+.tc-btn:hover {
+    filter: brightness(0.9);
+    transform: translateY(-1px);
+}
+.tc-green { background: #d1fae5; color: #065f46; }
+.tc-blue  { background: #dbeafe; color: #1e40af; }
+.tc-red   { background: #fee2e2; color: #991b1b; }
+
 /* Mobil pastki nav */
 .mobile-bottom-nav {
     display: none;

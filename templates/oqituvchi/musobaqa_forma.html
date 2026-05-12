@@ -1,11 +1,11 @@
-{% extends 'oqituvchi/base.html' %}
+{% extends 'base.html' %}
 
-{% block title %}{{ sarlavha }} - O'qituvchi paneli{% endblock %}
+{% block title %}{{ sarlavha }}{% endblock %}
 
 {% block content %}
 <div class="detail-nav">
-    <a href="{% url 'oqituvchi_musobaqalar' %}" class="detail-back-btn">
-        <i class="fas fa-arrow-left"></i> Musobaqalar
+    <a href="{% url 'bosh_sahifa' %}" class="detail-back-btn">
+        <i class="fas fa-arrow-left"></i> Bosh sahifa
     </a>
 </div>
 

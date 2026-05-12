@@ -64,7 +64,7 @@
                     <span>Darslar</span>
                 </a>
                 <a href="{% url 'topshiriqlar' %}" class="nav-item {% if request.resolver_match.url_name == 'topshiriqlar' %}active{% endif %}">
-                    <i class="fas fa-tasks"></i>
+                    <i class="fas fa-clipboard-list"></i>
                     <span>Topshiriqlar</span>
                 </a>
                 <a href="{% url 'statistika' %}" class="nav-item {% if request.resolver_match.url_name == 'statistika' %}active{% endif %}">
@@ -79,13 +79,6 @@
                     <i class="fas fa-cog"></i>
                     <span>Sozlamalar</span>
                 </a>
-                {% if user.is_authenticated and user.profil.rol == 'oqituvchi' %}
-                <div style="border-top: 1px solid #eee; margin: 12px 0;"></div>
-                <a href="{% url 'oqituvchi_panel' %}" class="nav-item {% if 'oqituvchi' in request.path %}active{% endif %}">
-                    <i class="fas fa-chalkboard-teacher"></i>
-                    <span>O'qituvchi paneli</span>
-                </a>
-                {% endif %}
             </nav>
 
             <div class="user-actions">
@@ -189,7 +182,7 @@
             <i class="fas fa-book"></i><span>Darslar</span>
         </a>
         <a href="{% url 'topshiriqlar' %}" class="mob-nav-item {% if 'topshiriq' in request.resolver_match.url_name %}mob-nav-active{% endif %}">
-            <i class="fas fa-tasks"></i><span>Testlar</span>
+            <i class="fas fa-clipboard-list"></i><span>Testlar</span>
         </a>
         <a href="{% url 'statistika' %}" class="mob-nav-item {% if request.resolver_match.url_name == 'statistika' %}mob-nav-active{% endif %}">
             <i class="fas fa-chart-bar"></i><span>Statistika</span>

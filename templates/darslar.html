@@ -16,35 +16,46 @@
 
             <!-- Darslar grid -->
             <section class="section">
+                {% if request.user.is_authenticated and request.user.profil.rol == 'oqituvchi' %}
+                <div style="display:flex; justify-content:flex-end; margin-bottom:16px;">
+                    <a href="{% url 'oqituvchi_dars_qoshish' %}" class="btn-primary" style="border:none; cursor:pointer; text-decoration:none;">
+                        <i class="fas fa-plus"></i> Yangi dars qo'shish
+                    </a>
+                </div>
+                {% endif %}
                 <div class="darslar-grid">
                     {% for dars in darslar %}
-                    <a href="{% url 'dars_detail' dars.pk %}" class="dars-card">
-                        <div class="dars-card-top">
-                            <div class="dars-card-subj">
-                                <span class="dars-icon" style="background: {{ dars.rang|default:'#f3f4f6' }};">{{ dars.icon }}</span>
-                                Dars {{ dars.raqam }}
+                    <div class="dars-card tc-card">
+                        <a href="{% url 'dars_detail' dars.pk %}" class="tc-body">
+                            <div class="dars-card-top">
+                                <div class="dars-card-subj">
+                                    <span class="dars-icon" style="background:{{ dars.rang|default:'#f3f4f6' }};">{{ dars.icon }}</span>
+                                    Dars {{ dars.raqam }}
+                                </div>
+                                {% if dars.holat == 'tugallangan' %}<span class="dars-badge done">Tugallangan</span>
+                                {% elif dars.holat == 'jarayonda' %}<span class="dars-badge progress">Jarayonda</span>
+                                {% else %}<span class="dars-badge locked">Qulflangan</span>{% endif %}
                             </div>
-                            {% if dars.holat == 'tugallangan' %}
-                            <span class="dars-badge done">Tugallangan</span>
-                            {% elif dars.holat == 'jarayonda' %}
-                            <span class="dars-badge progress">Jarayonda</span>
-                            {% else %}
-                            <span class="dars-badge locked">Qulflangan</span>
-                            {% endif %}
+                            <h3 class="dars-card-title">{{ dars.nomi }}</h3>
+                            <p class="dars-card-desc">{{ dars.tavsif }}</p>
+                            <div class="dars-card-info">
+                                <span><i class="fas fa-clock"></i> {{ dars.davomiylik }}</span>
+                                <span><i class="fas fa-layer-group"></i> Mavzu</span>
+                            </div>
+                            <div class="dars-card-bottom">
+                                <span class="dars-card-meta"><i class="fas fa-book-open"></i> Matematika</span>
+                                <span class="dars-card-btn">Boshlash <i class="fas fa-arrow-right"></i></span>
+                            </div>
+                        </a>
+                        {% if request.user.is_authenticated and request.user.profil.rol == 'oqituvchi' %}
+                        <div class="tc-actions">
+                            <a href="{% url 'oqituvchi_dars_tahrirlash' dars.pk %}" class="tc-btn tc-blue" title="Tahrirlash"><i class="fas fa-pen"></i></a>
+                            <form method="post" action="{% url 'oqituvchi_dars_ochirish' dars.pk %}" onsubmit="return confirm('Darsni o\'chirmoqchimisiz?')" style="margin:0;">
+                                {% csrf_token %}<button type="submit" class="tc-btn tc-red" title="O'chirish"><i class="fas fa-trash"></i></button>
+                            </form>
                         </div>
-                        <h3 class="dars-card-title">{{ dars.nomi }}</h3>
-                        <p class="dars-card-desc">{{ dars.tavsif }}</p>
-                        <div class="dars-card-info">
-                            <span><i class="fas fa-clock"></i> {{ dars.davomiylik }}</span>
-                            <span><i class="fas fa-layer-group"></i> Mavzu</span>
-                        </div>
-                        <div class="dars-card-bottom">
-                            <span class="dars-card-meta">
-                                <i class="fas fa-book-open"></i> Matematika
-                            </span>
-                            <span class="dars-card-btn">Boshlash <i class="fas fa-arrow-right"></i></span>
-                        </div>
-                    </a>
+                        {% endif %}
+                    </div>
                     {% endfor %}
                 </div>
             </section>

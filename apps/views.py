@@ -560,6 +560,41 @@ def sozlamalar(request):
     profil = None
     if request.user.is_authenticated and hasattr(request.user, 'profil'):
         profil = request.user.profil
+
+    xabar = None
+    xato = None
+
+    if request.method == 'POST' and profil:
+        action = request.POST.get('action', 'profil')
+        if action == 'profil':
+            profil.ism = request.POST.get('ism', profil.ism).strip()
+            profil.familiya = request.POST.get('familiya', profil.familiya).strip()
+            profil.email = request.POST.get('email', profil.email).strip()
+            try:
+                profil.yosh = int(request.POST.get('yosh', profil.yosh))
+            except ValueError:
+                pass
+            profil.sinf = request.POST.get('sinf', profil.sinf).strip()
+            profil.maktab = request.POST.get('maktab', profil.maktab).strip()
+            profil.save()
+            xabar = "Profil muvaffaqiyatli saqlandi."
+        elif action == 'parol':
+            old_pass = request.POST.get('eski_parol', '')
+            new_pass = request.POST.get('yangi_parol', '')
+            confirm_pass = request.POST.get('parol_tasdiqlash', '')
+            if not request.user.check_password(old_pass):
+                xato = "Eski parol noto'g'ri."
+            elif new_pass != confirm_pass:
+                xato = "Yangi parollar mos emas."
+            elif len(new_pass) < 6:
+                xato = "Parol kamida 6 ta belgidan iborat bo'lishi kerak."
+            else:
+                request.user.set_password(new_pass)
+                request.user.save()
+                from django.contrib.auth import update_session_auth_hash
+                update_session_auth_hash(request, request.user)
+                xabar = "Parol muvaffaqiyatli o'zgartirildi."
+
     context = {
         'profil': profil,
         'oquv_sozlamalari': OquvSozlama.objects.all(),
@@ -568,6 +603,8 @@ def sozlamalar(request):
         'xavfsizlik_sozlamalari': XavfsizlikSozlamasi.objects.all(),
         'stat': stat,
         'songgi_faoliyat': SongiFaoliyat.objects.filter(sahifa='sozlamalar'),
+        'xabar': xabar,
+        'xato': xato,
     }
     return render(request, 'sozlamalar.html', context)
 
@@ -668,36 +705,9 @@ def musobaqa_tekshirish(request, pk):
     return render(request, 'musobaqa_natija.html', context)
 
 
-# ===================== O'QITUVCHI PANELI =====================
-
-@oqituvchi_talab
-def oqituvchi_panel(request):
-    """O'qituvchi bosh paneli — umumiy ko'rinish."""
-    context = {
-        'kategoriyalar_soni': Kategoriya.objects.count(),
-        'mavzular_soni': Mavzu.objects.count(),
-        'darslar_soni': Dars.objects.count(),
-        'topshiriqlar_soni': Topshiriq.objects.count(),
-        'savollar_soni': Savol.objects.count(),
-        'musobaqalar_soni': Musobaqa.objects.count(),
-        'oquvchilar_soni': Profil.objects.filter(rol='oquvchi').count(),
-        'testlar_soni': TestNatija.objects.count(),
-    }
-    return render(request, 'oqituvchi/panel.html', context)
-
+# ===================== O'QITUVCHI AMALIYOTLARI =====================
 
 # --- Kategoriya ---
-@oqituvchi_talab
-def oqituvchi_kategoriyalar(request):
-    return render(request, 'oqituvchi/royxat.html', {
-        'sarlavha': 'Kategoriyalar',
-        'elementlar': Kategoriya.objects.all(),
-        'qoshish_url': 'oqituvchi_kategoriya_qoshish',
-        'tahrirlash_url': 'oqituvchi_kategoriya_tahrirlash',
-        'ochirish_url': 'oqituvchi_kategoriya_ochirish',
-        'ustunlar': ['Nomi', 'Tartib'],
-        'maydonlar': ['nomi', 'tartib'],
-    })
 
 
 @oqituvchi_talab
@@ -708,7 +718,7 @@ def oqituvchi_kategoriya_qoshish(request):
             tartib=int(request.POST.get('tartib', 0)),
         )
         messages.success(request, 'Kategoriya qo\'shildi.')
-        return redirect('oqituvchi_kategoriyalar')
+        return redirect('bosh_sahifa')
     return render(request, 'oqituvchi/kategoriya_forma.html', {
         'sarlavha': 'Yangi kategoriya',
     })
@@ -722,7 +732,7 @@ def oqituvchi_kategoriya_tahrirlash(request, pk):
         obj.tartib = int(request.POST.get('tartib', 0))
         obj.save()
         messages.success(request, 'Kategoriya yangilandi.')
-        return redirect('oqituvchi_kategoriyalar')
+        return redirect('bosh_sahifa')
     return render(request, 'oqituvchi/kategoriya_forma.html', {
         'sarlavha': f'"{obj.nomi}" ni tahrirlash',
         'obj': obj,
@@ -735,23 +745,10 @@ def oqituvchi_kategoriya_ochirish(request, pk):
     if request.method == 'POST':
         obj.delete()
         messages.success(request, 'Kategoriya o\'chirildi.')
-    return redirect('oqituvchi_kategoriyalar')
+    return redirect('bosh_sahifa')
 
 
 # --- Mavzu ---
-@oqituvchi_talab
-def oqituvchi_mavzular(request):
-    return render(request, 'oqituvchi/royxat.html', {
-        'sarlavha': 'Mavzular',
-        'elementlar': Mavzu.objects.all(),
-        'qoshish_url': 'oqituvchi_mavzu_qoshish',
-        'tahrirlash_url': 'oqituvchi_mavzu_tahrirlash',
-        'ochirish_url': 'oqituvchi_mavzu_ochirish',
-        'ustunlar': ['Raqam', 'Nomi', 'Tartib'],
-        'maydonlar': ['raqam', 'nomi', 'tartib'],
-    })
-
-
 @oqituvchi_talab
 def oqituvchi_mavzu_qoshish(request):
     if request.method == 'POST':
@@ -764,7 +761,7 @@ def oqituvchi_mavzu_qoshish(request):
             tartib=int(request.POST.get('tartib', 0)),
         )
         messages.success(request, 'Mavzu qo\'shildi.')
-        return redirect('oqituvchi_mavzular')
+        return redirect('bosh_sahifa')
     return render(request, 'oqituvchi/mavzu_forma.html', {
         'sarlavha': 'Yangi mavzu',
     })
@@ -782,7 +779,7 @@ def oqituvchi_mavzu_tahrirlash(request, pk):
         obj.tartib = int(request.POST.get('tartib', 0))
         obj.save()
         messages.success(request, 'Mavzu yangilandi.')
-        return redirect('oqituvchi_mavzular')
+        return redirect('bosh_sahifa')
     return render(request, 'oqituvchi/mavzu_forma.html', {
         'sarlavha': f'"{obj.nomi}" ni tahrirlash',
         'obj': obj,
@@ -795,23 +792,10 @@ def oqituvchi_mavzu_ochirish(request, pk):
     if request.method == 'POST':
         obj.delete()
         messages.success(request, 'Mavzu o\'chirildi.')
-    return redirect('oqituvchi_mavzular')
+    return redirect('bosh_sahifa')
 
 
 # --- Dars ---
-@oqituvchi_talab
-def oqituvchi_darslar(request):
-    return render(request, 'oqituvchi/royxat.html', {
-        'sarlavha': 'Darslar',
-        'elementlar': Dars.objects.all(),
-        'qoshish_url': 'oqituvchi_dars_qoshish',
-        'tahrirlash_url': 'oqituvchi_dars_tahrirlash',
-        'ochirish_url': 'oqituvchi_dars_ochirish',
-        'ustunlar': ['Raqam', 'Nomi', 'Kategoriya', 'Holat', 'Tartib'],
-        'maydonlar': ['raqam', 'nomi', 'kategoriya', 'holat', 'tartib'],
-    })
-
-
 @oqituvchi_talab
 def oqituvchi_dars_qoshish(request):
     if request.method == 'POST':
@@ -830,7 +814,7 @@ def oqituvchi_dars_qoshish(request):
             tartib=int(request.POST.get('tartib', 0)),
         )
         messages.success(request, 'Dars qo\'shildi.')
-        return redirect('oqituvchi_darslar')
+        return redirect('darslar')
     return render(request, 'oqituvchi/dars_forma.html', {
         'sarlavha': 'Yangi dars',
         'kategoriyalar': Kategoriya.objects.all(),
@@ -854,7 +838,7 @@ def oqituvchi_dars_tahrirlash(request, pk):
         obj.tartib = int(request.POST.get('tartib', 0))
         obj.save()
         messages.success(request, 'Dars yangilandi.')
-        return redirect('oqituvchi_darslar')
+        return redirect('darslar')
     return render(request, 'oqituvchi/dars_forma.html', {
         'sarlavha': f'"{obj.nomi}" ni tahrirlash',
         'obj': obj,
@@ -868,23 +852,10 @@ def oqituvchi_dars_ochirish(request, pk):
     if request.method == 'POST':
         obj.delete()
         messages.success(request, 'Dars o\'chirildi.')
-    return redirect('oqituvchi_darslar')
+    return redirect('darslar')
 
 
 # --- Topshiriq ---
-@oqituvchi_talab
-def oqituvchi_topshiriqlar(request):
-    return render(request, 'oqituvchi/royxat.html', {
-        'sarlavha': 'Topshiriqlar',
-        'elementlar': Topshiriq.objects.all(),
-        'qoshish_url': 'oqituvchi_topshiriq_qoshish',
-        'tahrirlash_url': 'oqituvchi_topshiriq_tahrirlash',
-        'ochirish_url': 'oqituvchi_topshiriq_ochirish',
-        'ustunlar': ['Nomi', 'Turi', 'Savollar', 'Tartib'],
-        'maydonlar': ['nomi', 'turi', 'savollar', 'tartib'],
-    })
-
-
 @oqituvchi_talab
 def oqituvchi_topshiriq_qoshish(request):
     if request.method == 'POST':
@@ -932,7 +903,7 @@ def oqituvchi_topshiriq_ochirish(request, pk):
     if request.method == 'POST':
         topshiriq.delete()
         messages.success(request, 'Topshiriq o\'chirildi.')
-    return redirect('oqituvchi_topshiriqlar')
+    return redirect('topshiriqlar')
 
 
 # --- Savol (Topshiriq savollari) ---
@@ -997,19 +968,6 @@ def oqituvchi_savol_ochirish(request, pk):
 
 # --- Musobaqa ---
 @oqituvchi_talab
-def oqituvchi_musobaqalar(request):
-    return render(request, 'oqituvchi/royxat.html', {
-        'sarlavha': 'Musobaqalar',
-        'elementlar': Musobaqa.objects.all(),
-        'qoshish_url': 'oqituvchi_musobaqa_qoshish',
-        'tahrirlash_url': 'oqituvchi_musobaqa_tahrirlash',
-        'ochirish_url': 'oqituvchi_musobaqa_ochirish',
-        'ustunlar': ['Nomi', 'Daraja', 'Qatnashchilar', 'Tartib'],
-        'maydonlar': ['nomi', 'daraja', 'qatnashchilar', 'tartib'],
-    })
-
-
-@oqituvchi_talab
 def oqituvchi_musobaqa_qoshish(request):
     if request.method == 'POST':
         musobaqa = Musobaqa.objects.create(
@@ -1054,7 +1012,7 @@ def oqituvchi_musobaqa_ochirish(request, pk):
     if request.method == 'POST':
         obj.delete()
         messages.success(request, 'Musobaqa o\'chirildi.')
-    return redirect('oqituvchi_musobaqalar')
+    return redirect('bosh_sahifa')
 
 
 # --- Musobaqa savollari ---
@@ -1111,3 +1069,194 @@ def oqituvchi_musobaqa_savol_ochirish(request, pk):
         savol.delete()
         messages.success(request, 'Savol o\'chirildi.')
     return redirect('oqituvchi_musobaqa_tahrirlash', pk=musobaqa.pk)
+
+
+# --- Word fayldan savollarni import qilish ---
+
+def _parse_inline(line):
+    """
+    Bitta qatordagi savol formatini parse qiladi:
+    "1. Savol matni? A) 6 B) 7 C) 8 D) 9 Javob: C"
+    """
+    import re
+    # Savol matnini ajratib olamiz (raqam + nuqta/qavs ixtiyoriy)
+    m = re.match(
+        r'^(?:\d+[.)]\s*)?(.+?)\s+'
+        r'[Aa][.)]\s*(.+?)\s+'
+        r'[Bb][.)]\s*(.+?)\s+'
+        r'[Cc][.)]\s*(.+?)\s+'
+        r'[Dd][.)]\s*(.+?)\s+'
+        r'[Jj]avob\s*[:=]\s*([AaBbCcDd])'
+        r'(?:\s+[Ii]zoh\s*[:=]\s*(.+))?$',
+        line.strip()
+    )
+    if m:
+        return {
+            'savol_matni': m.group(1).strip(),
+            'variant_a':   m.group(2).strip(),
+            'variant_b':   m.group(3).strip(),
+            'variant_c':   m.group(4).strip(),
+            'variant_d':   m.group(5).strip(),
+            'togri_javob': m.group(6).lower(),
+            'izoh':        (m.group(7) or '').strip(),
+        }
+    return None
+
+
+def _word_savollarni_parse(doc):
+    """
+    Word fayldan savollarni o'qiydi.
+
+    Uch xil formatni qo'llab-quvvatlaydi:
+
+    FORMAT 1 — har bir element alohida qatorda:
+      1. Savol matni?
+      A) variant
+      B) variant
+      C) variant
+      D) variant
+      Javob: B
+
+    FORMAT 2 — hammasi bitta qatorda:
+      1. Savol matni? A) 6 B) 7 C) 8 D) 9 Javob: C
+
+    FORMAT 3 — Word numbered list (raqam yo'q):
+      Savol matni?
+      A) variant  ...  Javob: B
+    """
+    import re
+
+    lines = []
+    for para in doc.paragraphs:
+        t = para.text.strip()
+        if t:
+            lines.append(t)
+    for table in doc.tables:
+        for row in table.rows:
+            for cell in row.cells:
+                for sub in cell.text.splitlines():
+                    s = sub.strip()
+                    if s:
+                        lines.append(s)
+
+    savollar = []
+
+    # --- FORMAT 2: bitta qatorda ---
+    inline_found = False
+    for line in lines:
+        parsed = _parse_inline(line)
+        if parsed:
+            inline_found = True
+            if not savollar or savollar[-1]['savol_matni'] != parsed['savol_matni']:
+                savollar.append(parsed)
+
+    if inline_found:
+        return savollar
+
+    # --- FORMAT 1 & 3: alohida qatorlar ---
+    i = 0
+    while i < len(lines):
+        line = lines[i]
+        a_match = re.match(r'^[Aa][.)]\s*(.+)', line)
+        if a_match and i > 0:
+            prev = lines[i - 1]
+            savol_matni = re.sub(r'^\d+[.)]\s*', '', prev).strip()
+            variant = {
+                'a': a_match.group(1).strip(),
+                'b': '', 'c': '', 'd': '',
+                'togri': 'a', 'izoh': ''
+            }
+            i += 1
+            while i < len(lines):
+                l = lines[i].strip()
+                v = re.match(r'^([BbCcDd])[.)]\s*(.+)', l)
+                if v:
+                    variant[v.group(1).lower()] = v.group(2).strip()
+                    i += 1
+                    continue
+                j = re.match(r'^[Jj]avob\s*[:=]\s*([AaBbCcDd])', l)
+                if j:
+                    variant['togri'] = j.group(1).lower()
+                    i += 1
+                    continue
+                iz = re.match(r'^[Ii]zoh\s*[:=]\s*(.+)', l)
+                if iz:
+                    variant['izoh'] = iz.group(1).strip()
+                    i += 1
+                    continue
+                break
+            if savol_matni and variant['a'] and variant['b']:
+                if not savollar or savollar[-1]['savol_matni'] != savol_matni:
+                    savollar.append({
+                        'savol_matni': savol_matni,
+                        'variant_a': variant['a'],
+                        'variant_b': variant['b'],
+                        'variant_c': variant['c'],
+                        'variant_d': variant['d'],
+                        'togri_javob': variant['togri'],
+                        'izoh': variant['izoh'],
+                    })
+        else:
+            i += 1
+
+    return savollar
+
+
+@oqituvchi_talab
+def oqituvchi_savollar_import(request, topshiriq_pk):
+    from docx import Document
+    topshiriq = get_object_or_404(Topshiriq, pk=topshiriq_pk)
+
+    if request.method == 'POST':
+        fayl = request.FILES.get('word_fayl')
+        if not fayl:
+            messages.error(request, 'Fayl tanlanmadi.')
+            return redirect('oqituvchi_savollar_import', topshiriq_pk=topshiriq_pk)
+
+        if not fayl.name.endswith(('.docx', '.doc')):
+            messages.error(request, 'Faqat .docx formatdagi fayl qabul qilinadi.')
+            return redirect('oqituvchi_savollar_import', topshiriq_pk=topshiriq_pk)
+
+        try:
+            doc = Document(fayl)
+            # Debug: fayldan o'qilgan satrlarni ko'rsatamiz
+            raw_lines = []
+            for para in doc.paragraphs:
+                t = para.text.strip()
+                if t:
+                    raw_lines.append(t)
+            savollar = _word_savollarni_parse(doc)
+        except Exception as e:
+            messages.error(request, f'Faylni o\'qishda xato: {e}')
+            return redirect('oqituvchi_savollar_import', topshiriq_pk=topshiriq_pk)
+
+        # Ko'rib chiqish yoki saqlash
+        if 'preview' in request.POST or not savollar:
+            return render(request, 'oqituvchi/savollar_import.html', {
+                'topshiriq': topshiriq,
+                'raw_lines': raw_lines,
+                'savollar_preview': savollar,
+                'xato': not savollar,
+            })
+
+        oxirgi_tartib = topshiriq.savollar_list.count()
+        for idx, s in enumerate(savollar):
+            Savol.objects.create(
+                topshiriq=topshiriq,
+                savol_matni=s['savol_matni'],
+                variant_a=s['variant_a'],
+                variant_b=s['variant_b'],
+                variant_c=s['variant_c'],
+                variant_d=s['variant_d'],
+                togri_javob=s['togri_javob'],
+                izoh=s['izoh'],
+                tartib=oxirgi_tartib + idx,
+            )
+        topshiriq.savollar = topshiriq.savollar_list.count()
+        topshiriq.save(update_fields=['savollar'])
+        messages.success(request, f'{len(savollar)} ta savol muvaffaqiyatli yuklandi!')
+        return redirect('oqituvchi_topshiriq_tahrirlash', pk=topshiriq_pk)
+
+    return render(request, 'oqituvchi/savollar_import.html', {
+        'topshiriq': topshiriq,
+    })

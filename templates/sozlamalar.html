@@ -3,174 +3,148 @@
 {% block title %}Sozlamalar - Matematika Olami{% endblock %}
 
 {% block content %}
-            <!-- Sarlavha -->
-            <div class="stat-page-header">
-                <div>
-                    <h1 class="stat-page-title">Sozlamalar</h1>
-                    <p class="stat-page-subtitle">Hisobingiz va ilovani sozlash</p>
+<div class="stat-page-header">
+    <div>
+        <h1 class="stat-page-title">Sozlamalar</h1>
+        <p class="stat-page-subtitle">Hisobingiz va ilovani sozlash</p>
+    </div>
+</div>
+
+{% if xabar %}
+<div style="padding:12px 20px; border-radius:12px; margin-bottom:20px; background:#e8f5e9; color:#2e7d32; font-size:14px;">
+    <i class="fas fa-circle-check"></i> {{ xabar }}
+</div>
+{% endif %}
+{% if xato %}
+<div style="padding:12px 20px; border-radius:12px; margin-bottom:20px; background:#fce4ec; color:#c62828; font-size:14px;">
+    <i class="fas fa-triangle-exclamation"></i> {{ xato }}
+</div>
+{% endif %}
+
+{% if profil %}
+<!-- Profil sozlamalari -->
+<section class="section">
+    <h2 class="section-title">Profil ma'lumotlari</h2>
+    <div class="sozlama-card">
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="profil">
+            <div class="sozlama-profil">
+                <div class="sozlama-avatar">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <div class="sozlama-form">
+                    <div class="sozlama-row">
+                        <div class="sozlama-field">
+                            <label>Ism</label>
+                            <div class="sozlama-input">
+                                <i class="fas fa-user"></i>
+                                <input type="text" name="ism" value="{{ profil.ism }}" required
+                                    style="border:none; outline:none; background:transparent; font-size:14px; flex:1; color:#333;">
+                            </div>
+                        </div>
+                        <div class="sozlama-field">
+                            <label>Familiya</label>
+                            <div class="sozlama-input">
+                                <i class="fas fa-user"></i>
+                                <input type="text" name="familiya" value="{{ profil.familiya }}" required
+                                    style="border:none; outline:none; background:transparent; font-size:14px; flex:1; color:#333;">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sozlama-row">
+                        <div class="sozlama-field">
+                            <label>Email</label>
+                            <div class="sozlama-input">
+                                <i class="fas fa-envelope"></i>
+                                <input type="email" name="email" value="{{ profil.email }}"
+                                    style="border:none; outline:none; background:transparent; font-size:14px; flex:1; color:#333;">
+                            </div>
+                        </div>
+                        <div class="sozlama-field">
+                            <label>Yosh</label>
+                            <div class="sozlama-input">
+                                <i class="fas fa-cake-candles"></i>
+                                <input type="number" name="yosh" value="{{ profil.yosh }}" min="5" max="100"
+                                    style="border:none; outline:none; background:transparent; font-size:14px; flex:1; color:#333; width:60px;">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sozlama-row">
+                        <div class="sozlama-field">
+                            <label>Sinf</label>
+                            <div class="sozlama-input">
+                                <i class="fas fa-graduation-cap"></i>
+                                <input type="text" name="sinf" value="{{ profil.sinf }}"
+                                    style="border:none; outline:none; background:transparent; font-size:14px; flex:1; color:#333;">
+                            </div>
+                        </div>
+                        <div class="sozlama-field">
+                            <label>Maktab</label>
+                            <div class="sozlama-input">
+                                <i class="fas fa-school"></i>
+                                <input type="text" name="maktab" value="{{ profil.maktab }}"
+                                    style="border:none; outline:none; background:transparent; font-size:14px; flex:1; color:#333;">
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-primary sozlama-save-btn" style="border:none; cursor:pointer;">
+                        <i class="fas fa-save"></i> Saqlash
+                    </button>
                 </div>
             </div>
+        </form>
+    </div>
+</section>
 
-            <!-- Profil sozlamalari -->
-            <section class="section">
-                <h2 class="section-title">Profil ma'lumotlari</h2>
-                <div class="sozlama-card">
-                    <div class="sozlama-profil">
-                        <div class="sozlama-avatar">
-                            <i class="fas fa-user-circle"></i>
-                            <button class="sozlama-avatar-btn"><i class="fas fa-camera"></i></button>
-                        </div>
-                        <div class="sozlama-form">
-                            <div class="sozlama-row">
-                                <div class="sozlama-field">
-                                    <label>Ism</label>
-                                    <div class="sozlama-input">
-                                        <i class="fas fa-user"></i>
-                                        <span>{{ profil.ism }}</span>
-                                    </div>
-                                </div>
-                                <div class="sozlama-field">
-                                    <label>Familiya</label>
-                                    <div class="sozlama-input">
-                                        <i class="fas fa-user"></i>
-                                        <span>{{ profil.familiya }}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="sozlama-row">
-                                <div class="sozlama-field">
-                                    <label>Email</label>
-                                    <div class="sozlama-input">
-                                        <i class="fas fa-envelope"></i>
-                                        <span>{{ profil.email }}</span>
-                                    </div>
-                                </div>
-                                <div class="sozlama-field">
-                                    <label>Yosh</label>
-                                    <div class="sozlama-input">
-                                        <i class="fas fa-birthday-cake"></i>
-                                        <span>{{ profil.yosh }} yosh</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="sozlama-row">
-                                <div class="sozlama-field">
-                                    <label>Sinf</label>
-                                    <div class="sozlama-input">
-                                        <i class="fas fa-graduation-cap"></i>
-                                        <span>{{ profil.sinf }}</span>
-                                    </div>
-                                </div>
-                                <div class="sozlama-field">
-                                    <label>Maktab</label>
-                                    <div class="sozlama-input">
-                                        <i class="fas fa-school"></i>
-                                        <span>{{ profil.maktab }}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <button class="btn-primary sozlama-save-btn">Tahrirlash</button>
-                        </div>
+<!-- Parol o'zgartirish -->
+<section class="section">
+    <h2 class="section-title">Parol o'zgartirish</h2>
+    <div class="sozlama-card" style="padding:24px;">
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="parol">
+            <div class="sozlama-row">
+                <div class="sozlama-field">
+                    <label>Eski parol</label>
+                    <div class="sozlama-input">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" name="eski_parol" required
+                            style="border:none; outline:none; background:transparent; font-size:14px; flex:1; color:#333;">
                     </div>
                 </div>
-            </section>
-
-            <!-- O'quv sozlamalari -->
-            <section class="section">
-                <h2 class="section-title">O'quv sozlamalari</h2>
-                <div class="sozlama-card">
-                    {% for sozlama in oquv_sozlamalari %}
-                    <div class="sozlama-item">
-                        <div class="sozlama-item-left">
-                            <div class="sozlama-item-icon" style="background: {{ sozlama.rang }}; color: {{ sozlama.icon_rang }};">
-                                <i class="fas fa-{{ sozlama.icon }}"></i>
-                            </div>
-                            <div class="sozlama-item-info">
-                                <h4>{{ sozlama.nomi }}</h4>
-                                <p>{{ sozlama.tavsif }}</p>
-                            </div>
-                        </div>
-                        <div class="sozlama-item-right">
-                            {% if sozlama.turi == 'toggle' %}
-                            <label class="sozlama-toggle">
-                                <input type="checkbox" {% if sozlama.qiymat_bool %}checked{% endif %}>
-                                <span class="sozlama-toggle-slider"></span>
-                            </label>
-                            {% elif sozlama.turi == 'select' %}
-                            <div class="sozlama-select">{{ sozlama.qiymat_text }}</div>
-                            {% endif %}
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-            </section>
-
-            <!-- Bildirishnoma sozlamalari -->
-            <section class="section">
-                <h2 class="section-title">Bildirishnomalar</h2>
-                <div class="sozlama-card">
-                    {% for bildirishnoma in bildirishnomalar %}
-                    <div class="sozlama-item">
-                        <div class="sozlama-item-left">
-                            <div class="sozlama-item-icon" style="background: {{ bildirishnoma.rang }}; color: {{ bildirishnoma.icon_rang }};">
-                                <i class="fas fa-{{ bildirishnoma.icon }}"></i>
-                            </div>
-                            <div class="sozlama-item-info">
-                                <h4>{{ bildirishnoma.nomi }}</h4>
-                                <p>{{ bildirishnoma.tavsif }}</p>
-                            </div>
-                        </div>
-                        <div class="sozlama-item-right">
-                            <label class="sozlama-toggle">
-                                <input type="checkbox" {% if bildirishnoma.yoqilgan %}checked{% endif %}>
-                                <span class="sozlama-toggle-slider"></span>
-                            </label>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-            </section>
-
-            <!-- Ko'rinish sozlamalari -->
-            <section class="section">
-                <h2 class="section-title">Ko'rinish</h2>
-                <div class="sozlama-card">
-                    <div class="sozlama-tema-grid">
-                        {% for tema in temalar %}
-                        <div class="sozlama-tema-card {% if tema.tanlangan %}sozlama-tema-active{% endif %}" style="background: {{ tema.rang }};">
-                            <div class="sozlama-tema-preview" style="background: {{ tema.preview_rang }};"></div>
-                            <span>{{ tema.nomi }}</span>
-                            {% if tema.tanlangan %}
-                            <i class="fas fa-check-circle sozlama-tema-check"></i>
-                            {% endif %}
-                        </div>
-                        {% endfor %}
+                <div class="sozlama-field">
+                    <label>Yangi parol</label>
+                    <div class="sozlama-input">
+                        <i class="fas fa-lock-open"></i>
+                        <input type="password" name="yangi_parol" required minlength="6"
+                            style="border:none; outline:none; background:transparent; font-size:14px; flex:1; color:#333;">
                     </div>
                 </div>
-            </section>
-
-            <!-- Xavfsizlik -->
-            <section class="section">
-                <h2 class="section-title">Xavfsizlik</h2>
-                <div class="sozlama-card">
-                    {% for xavfsizlik in xavfsizlik_sozlamalari %}
-                    <div class="sozlama-item sozlama-item-clickable">
-                        <div class="sozlama-item-left">
-                            <div class="sozlama-item-icon" style="background: {{ xavfsizlik.rang }}; color: {{ xavfsizlik.icon_rang }};">
-                                <i class="fas fa-{{ xavfsizlik.icon }}"></i>
-                            </div>
-                            <div class="sozlama-item-info">
-                                <h4>{{ xavfsizlik.nomi }}</h4>
-                                <p>{{ xavfsizlik.tavsif }}</p>
-                            </div>
-                        </div>
-                        <div class="sozlama-item-right">
-                            <i class="fas fa-chevron-right sozlama-arrow"></i>
-                        </div>
+            </div>
+            <div class="sozlama-row" style="margin-top:12px;">
+                <div class="sozlama-field">
+                    <label>Yangi parolni tasdiqlash</label>
+                    <div class="sozlama-input">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" name="parol_tasdiqlash" required minlength="6"
+                            style="border:none; outline:none; background:transparent; font-size:14px; flex:1; color:#333;">
                     </div>
-                    {% endfor %}
                 </div>
-            </section>
+            </div>
+            <button type="submit" class="btn-primary" style="border:none; cursor:pointer; margin-top:16px;">
+                <i class="fas fa-key"></i> Parolni o'zgartirish
+            </button>
+        </form>
+    </div>
+</section>
+{% else %}
+<div style="background:#fff; border-radius:16px; padding:40px; text-align:center; margin-bottom:24px; color:#999;">
+    <i class="fas fa-user-slash" style="font-size:32px; display:block; margin-bottom:12px;"></i>
+    Profil ma'lumotlarini ko'rish uchun <a href="{% url 'kirish' %}" style="color:#6c63ff;">tizimga kiring</a>.
+</div>
+{% endif %}
+
 {% endblock %}
 
 {% block activity_title %}Hisob ma'lumotlari{% endblock %}

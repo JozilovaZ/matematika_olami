@@ -57,7 +57,7 @@
             <!-- Topshiriqlar -->
             {% if topshiriqlar %}
             <section class="section">
-                <h2 class="section-title"><i class="fas fa-tasks"></i> Topshiriqlar</h2>
+                <h2 class="section-title"><i class="fas fa-clipboard-list"></i> Topshiriqlar</h2>
                 <div class="darslar-grid">
                     {% for top in topshiriqlar %}
                     <a href="{% url 'topshiriq_detail' top.pk %}" class="dars-card">
@@ -82,7 +82,7 @@
                         </div>
                         <div class="dars-card-bottom">
                             <span class="dars-card-meta">
-                                <i class="fas fa-tasks"></i> {{ top.get_turi_display }}
+                                <i class="fas fa-clipboard-list"></i> {{ top.get_turi_display }}
                             </span>
                             <span class="dars-card-btn">Boshlash <i class="fas fa-arrow-right"></i></span>
                         </div>

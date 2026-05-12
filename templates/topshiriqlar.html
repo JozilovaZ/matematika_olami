@@ -14,6 +14,16 @@
                 </div>
             </section>
 
+            {% if request.user.is_authenticated and request.user.profil.rol == 'oqituvchi' %}
+            <section class="section">
+                <div style="display:flex; justify-content:flex-end;">
+                    <a href="{% url 'oqituvchi_topshiriq_qoshish' %}" class="btn-primary" style="border:none; cursor:pointer; text-decoration:none;">
+                        <i class="fas fa-plus"></i> Yangi topshiriq qo'shish
+                    </a>
+                </div>
+            </section>
+            {% endif %}
+
             <!-- Mavzular bo'yicha topshiriqlar -->
             {% for mt in mavzu_topshiriqlar %}
             <section class="section">
@@ -24,33 +34,39 @@
                 </h2>
                 <div class="darslar-grid">
                     {% for top in mt.topshiriqlar %}
-                    <a href="{% url 'topshiriq_detail' top.pk %}" class="dars-card">
-                        <div class="dars-card-top">
-                            <div class="dars-card-subj">
-                                <span class="dars-icon" style="background: {{ top.rang|default:'#f3f4f6' }};">{{ top.icon|default:'📝' }}</span>
-                                Topshiriq
+                    <div class="dars-card tc-card">
+                        <a href="{% url 'topshiriq_detail' top.pk %}" class="tc-body">
+                            <div class="dars-card-top">
+                                <div class="dars-card-subj">
+                                    <span class="dars-icon" style="background:{{ top.rang|default:'#f3f4f6' }};">{{ top.icon|default:'📝' }}</span>
+                                    Topshiriq
+                                </div>
+                                {% if top.foiz >= 100 %}<span class="dars-badge done">Tugallangan</span>
+                                {% elif top.foiz > 0 %}<span class="dars-badge progress">Jarayonda</span>
+                                {% else %}<span class="dars-badge locked">Yangi</span>{% endif %}
                             </div>
-                            {% if top.foiz >= 100 %}
-                            <span class="dars-badge done">Tugallangan</span>
-                            {% elif top.foiz > 0 %}
-                            <span class="dars-badge progress">Jarayonda</span>
-                            {% else %}
-                            <span class="dars-badge locked">Yangi</span>
-                            {% endif %}
+                            <h3 class="dars-card-title">{{ top.nomi }}</h3>
+                            <p class="dars-card-desc">{{ top.tavsif|default:"Bu topshiriq orqali bilimingizni sinab ko'ring." }}</p>
+                            <div class="dars-card-info">
+                                <span><i class="fas fa-circle-question"></i> {{ top.savollar }} ta savol</span>
+                                <span><i class="fas fa-chart-line"></i> {{ top.foiz }}%</span>
+                            </div>
+                            <div class="dars-card-bottom">
+                                <span class="dars-card-meta"><i class="fas fa-clipboard-list"></i> {{ top.get_turi_display }}</span>
+                                <span class="dars-card-btn">Boshlash <i class="fas fa-arrow-right"></i></span>
+                            </div>
+                        </a>
+                        {% if request.user.is_authenticated and request.user.profil.rol == 'oqituvchi' %}
+                        <div class="tc-actions">
+                            <a href="{% url 'oqituvchi_savol_qoshish' top.pk %}" class="tc-btn tc-green" title="Test savol qo'shish"><i class="fas fa-plus"></i></a>
+                            <a href="{% url 'oqituvchi_topshiriq_tahrirlash' top.pk %}" class="tc-btn tc-blue" title="Tahrirlash"><i class="fas fa-pen"></i></a>
+                            <form method="post" action="{% url 'oqituvchi_topshiriq_ochirish' top.pk %}" onsubmit="return confirm('O\'chirmoqchimisiz?')" style="margin:0;">
+                                {% csrf_token %}
+                                <button type="submit" class="tc-btn tc-red" title="O'chirish"><i class="fas fa-trash"></i></button>
+                            </form>
                         </div>
-                        <h3 class="dars-card-title">{{ top.nomi }}</h3>
-                        <p class="dars-card-desc">{{ top.tavsif|default:"Bu topshiriq orqali bilimingizni sinab ko'ring." }}</p>
-                        <div class="dars-card-info">
-                            <span><i class="fas fa-question-circle"></i> {{ top.savollar }} ta savol</span>
-                            <span><i class="fas fa-chart-line"></i> {{ top.foiz }}%</span>
-                        </div>
-                        <div class="dars-card-bottom">
-                            <span class="dars-card-meta">
-                                <i class="fas fa-tasks"></i> {{ top.get_turi_display }}
-                            </span>
-                            <span class="dars-card-btn">Boshlash <i class="fas fa-arrow-right"></i></span>
-                        </div>
-                    </a>
+                        {% endif %}
+                    </div>
                     {% endfor %}
                 </div>
             </section>
@@ -64,63 +80,73 @@
                 {% endif %}
                 <div class="darslar-grid">
                     {% for top in kichik_topshiriqlar %}
-                    <a href="{% url 'topshiriq_detail' top.pk %}" class="dars-card">
-                        <div class="dars-card-top">
-                            <div class="dars-card-subj">
-                                <span class="dars-icon" style="background: {{ top.rang|default:'#f3f4f6' }};">{{ top.icon }}</span>
-                                Topshiriq
+                    <div class="dars-card tc-card">
+                        <a href="{% url 'topshiriq_detail' top.pk %}" class="tc-body">
+                            <div class="dars-card-top">
+                                <div class="dars-card-subj">
+                                    <span class="dars-icon" style="background:{{ top.rang|default:'#f3f4f6' }};">{{ top.icon|default:'📝' }}</span>
+                                    Topshiriq
+                                </div>
+                                {% if top.foiz >= 100 %}<span class="dars-badge done">Tugallangan</span>
+                                {% elif top.foiz > 0 %}<span class="dars-badge progress">Jarayonda</span>
+                                {% else %}<span class="dars-badge locked">Yangi</span>{% endif %}
                             </div>
-                            {% if top.foiz >= 100 %}
-                            <span class="dars-badge done">Tugallangan</span>
-                            {% elif top.foiz > 0 %}
-                            <span class="dars-badge progress">Jarayonda</span>
-                            {% else %}
-                            <span class="dars-badge locked">Yangi</span>
-                            {% endif %}
+                            <h3 class="dars-card-title">{{ top.nomi }}</h3>
+                            <p class="dars-card-desc">{{ top.tavsif|default:"Bu topshiriq orqali bilimingizni sinab ko'ring." }}</p>
+                            <div class="dars-card-info">
+                                <span><i class="fas fa-circle-question"></i> {{ top.savollar }} ta savol</span>
+                                <span><i class="fas fa-chart-line"></i> {{ top.foiz }}%</span>
+                            </div>
+                            <div class="dars-card-bottom">
+                                <span class="dars-card-meta"><i class="fas fa-clipboard-list"></i> Kichik topshiriq</span>
+                                <span class="dars-card-btn">Boshlash <i class="fas fa-arrow-right"></i></span>
+                            </div>
+                        </a>
+                        {% if request.user.is_authenticated and request.user.profil.rol == 'oqituvchi' %}
+                        <div class="tc-actions">
+                            <a href="{% url 'oqituvchi_savol_qoshish' top.pk %}" class="tc-btn tc-green" title="Test savol qo'shish"><i class="fas fa-plus"></i></a>
+                            <a href="{% url 'oqituvchi_topshiriq_tahrirlash' top.pk %}" class="tc-btn tc-blue" title="Tahrirlash"><i class="fas fa-pen"></i></a>
+                            <form method="post" action="{% url 'oqituvchi_topshiriq_ochirish' top.pk %}" onsubmit="return confirm('O\'chirmoqchimisiz?')" style="margin:0;">
+                                {% csrf_token %}<button type="submit" class="tc-btn tc-red" title="O'chirish"><i class="fas fa-trash"></i></button>
+                            </form>
                         </div>
-                        <h3 class="dars-card-title">{{ top.nomi }}</h3>
-                        <p class="dars-card-desc">{{ top.tavsif|default:"Bu topshiriq orqali bilimingizni sinab ko'ring." }}</p>
-                        <div class="dars-card-info">
-                            <span><i class="fas fa-question-circle"></i> {{ top.savollar }} ta savol</span>
-                            <span><i class="fas fa-chart-line"></i> {{ top.foiz }}%</span>
-                        </div>
-                        <div class="dars-card-bottom">
-                            <span class="dars-card-meta">
-                                <i class="fas fa-tasks"></i> Kichik topshiriq
-                            </span>
-                            <span class="dars-card-btn">Boshlash <i class="fas fa-arrow-right"></i></span>
-                        </div>
-                    </a>
+                        {% endif %}
+                    </div>
                     {% endfor %}
 
                     {% for top in pastki_topshiriqlar %}
-                    <a href="{% url 'topshiriq_detail' top.pk %}" class="dars-card">
-                        <div class="dars-card-top">
-                            <div class="dars-card-subj">
-                                <span class="dars-icon" style="background: {{ top.rang|default:'#f3f4f6' }};">{{ top.icon|default:'📚' }}</span>
-                                Topshiriq
+                    <div class="dars-card tc-card">
+                        <a href="{% url 'topshiriq_detail' top.pk %}" class="tc-body">
+                            <div class="dars-card-top">
+                                <div class="dars-card-subj">
+                                    <span class="dars-icon" style="background:{{ top.rang|default:'#f3f4f6' }};">{{ top.icon|default:'📚' }}</span>
+                                    Topshiriq
+                                </div>
+                                {% if top.foiz >= 100 %}<span class="dars-badge done">Tugallangan</span>
+                                {% elif top.foiz > 0 %}<span class="dars-badge progress">Jarayonda</span>
+                                {% else %}<span class="dars-badge locked">Yangi</span>{% endif %}
                             </div>
-                            {% if top.foiz >= 100 %}
-                            <span class="dars-badge done">Tugallangan</span>
-                            {% elif top.foiz > 0 %}
-                            <span class="dars-badge progress">Jarayonda</span>
-                            {% else %}
-                            <span class="dars-badge locked">Yangi</span>
-                            {% endif %}
+                            <h3 class="dars-card-title">{{ top.nomi }}</h3>
+                            <p class="dars-card-desc">{{ top.tavsif|default:"Bu topshiriq orqali bilimingizni sinab ko'ring." }}</p>
+                            <div class="dars-card-info">
+                                <span><i class="fas fa-circle-question"></i> {{ top.savollar }} ta savol</span>
+                                <span><i class="fas fa-chart-line"></i> {{ top.foiz }}%</span>
+                            </div>
+                            <div class="dars-card-bottom">
+                                <span class="dars-card-meta"><i class="fas fa-clipboard-list"></i> Qo'shimcha topshiriq</span>
+                                <span class="dars-card-btn">Sinash <i class="fas fa-arrow-right"></i></span>
+                            </div>
+                        </a>
+                        {% if request.user.is_authenticated and request.user.profil.rol == 'oqituvchi' %}
+                        <div class="tc-actions">
+                            <a href="{% url 'oqituvchi_savol_qoshish' top.pk %}" class="tc-btn tc-green" title="Test savol qo'shish"><i class="fas fa-plus"></i></a>
+                            <a href="{% url 'oqituvchi_topshiriq_tahrirlash' top.pk %}" class="tc-btn tc-blue" title="Tahrirlash"><i class="fas fa-pen"></i></a>
+                            <form method="post" action="{% url 'oqituvchi_topshiriq_ochirish' top.pk %}" onsubmit="return confirm('O\'chirmoqchimisiz?')" style="margin:0;">
+                                {% csrf_token %}<button type="submit" class="tc-btn tc-red" title="O'chirish"><i class="fas fa-trash"></i></button>
+                            </form>
                         </div>
-                        <h3 class="dars-card-title">{{ top.nomi }}</h3>
-                        <p class="dars-card-desc">{{ top.tavsif|default:"Bu topshiriq orqali bilimingizni sinab ko'ring." }}</p>
-                        <div class="dars-card-info">
-                            <span><i class="fas fa-question-circle"></i> {{ top.savollar }} ta savol</span>
-                            <span><i class="fas fa-chart-line"></i> {{ top.foiz }}%</span>
-                        </div>
-                        <div class="dars-card-bottom">
-                            <span class="dars-card-meta">
-                                <i class="fas fa-tasks"></i> Qo'shimcha topshiriq
-                            </span>
-                            <span class="dars-card-btn">Sinash <i class="fas fa-arrow-right"></i></span>
-                        </div>
-                    </a>
+                        {% endif %}
+                    </div>
                     {% endfor %}
                 </div>
             </section>
