@@ -158,13 +158,24 @@ def darslar(request):
 
 
 def dars_detail(request, pk):
+    import re as _re
+    from django.utils.html import escape as _escape
+    from django.utils.safestring import mark_safe as _mark_safe
     dars = get_object_or_404(Dars, pk=pk)
     stat = UmumiyStatistika.get()
     oldingi = Dars.objects.filter(tartib__lt=dars.tartib).order_by('-tartib').first()
     keyingi = Dars.objects.filter(tartib__gt=dars.tartib).order_by('tartib').first()
     topshiriqlar = dars.topshiriqlar.all()
+    mazmun = dars.mazmun or ''
+    if mazmun and not _re.search(r'<[a-zA-Z]', mazmun):
+        mazmun_html = _mark_safe(
+            '<p>' + _escape(mazmun).replace('\r\n', '\n').replace('\n\n', '</p><p>').replace('\n', '<br>') + '</p>'
+        )
+    else:
+        mazmun_html = _mark_safe(mazmun)
     context = {
         'dars': dars,
+        'mazmun_html': mazmun_html,
         'stat': stat,
         'oldingi': oldingi,
         'keyingi': keyingi,
@@ -192,12 +203,16 @@ def topshiriqlar(request):
 
 
 def topshiriq_detail(request, pk):
+    import random as _random
     topshiriq = get_object_or_404(Topshiriq, pk=pk)
     stat = UmumiyStatistika.get()
-    savollar = topshiriq.savollar_list.all()
+    barcha = list(topshiriq.savollar_list.all())
+    savollar = _random.sample(barcha, min(10, len(barcha)))
+    savol_idlar = ','.join(str(s.pk) for s in savollar)
     context = {
         'topshiriq': topshiriq,
         'savollar': savollar,
+        'savol_idlar': savol_idlar,
         'stat': stat,
     }
     return render(request, 'topshiriq_detail.html', context)
@@ -210,7 +225,12 @@ def topshiriq_tekshirish(request, pk):
         return redirect('topshiriq_detail', pk=pk)
 
     stat = UmumiyStatistika.get()
-    savollar = topshiriq.savollar_list.all()
+    savol_idlar = request.POST.get('savol_idlar', '')
+    if savol_idlar:
+        id_list = [int(i) for i in savol_idlar.split(',') if i.strip().isdigit()]
+        savollar = topshiriq.savollar_list.filter(pk__in=id_list)
+    else:
+        savollar = topshiriq.savollar_list.all()
 
     natijalar = []
     batafsil = []
@@ -801,6 +821,8 @@ def oqituvchi_dars_qoshish(request):
     if request.method == 'POST':
         kat_pk = request.POST.get('kategoriya')
         kat = Kategoriya.objects.filter(pk=kat_pk).first() if kat_pk else None
+        from django.db.models import Max as _Max
+        oxirgi_tartib = (Dars.objects.aggregate(m=_Max('tartib'))['m'] or 0) + 1
         Dars.objects.create(
             raqam=request.POST.get('raqam', '').strip(),
             nomi=request.POST.get('nomi', '').strip(),
@@ -811,7 +833,7 @@ def oqituvchi_dars_qoshish(request):
             holat=request.POST.get('holat', 'qulflangan'),
             kategoriya=kat,
             mazmun=request.POST.get('mazmun', '').strip(),
-            tartib=int(request.POST.get('tartib', 0)),
+            tartib=oxirgi_tartib,
         )
         messages.success(request, 'Dars qo\'shildi.')
         return redirect('darslar')
@@ -835,7 +857,6 @@ def oqituvchi_dars_tahrirlash(request, pk):
         obj.holat = request.POST.get('holat', 'qulflangan')
         obj.kategoriya = Kategoriya.objects.filter(pk=kat_pk).first() if kat_pk else None
         obj.mazmun = request.POST.get('mazmun', '').strip()
-        obj.tartib = int(request.POST.get('tartib', 0))
         obj.save()
         messages.success(request, 'Dars yangilandi.')
         return redirect('darslar')

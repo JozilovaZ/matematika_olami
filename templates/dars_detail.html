@@ -31,15 +31,6 @@
                     <p>{{ dars.tavsif }}</p>
                     <div class="dars-detail-meta">
                         <span><i class="fas fa-clock"></i> {{ dars.davomiylik }}</span>
-                        <span>
-                            {% if dars.holat == 'tugallangan' %}
-                            <i class="fas fa-check-circle" style="color: #4caf50;"></i> Tugallangan
-                            {% elif dars.holat == 'jarayonda' %}
-                            <i class="fas fa-spinner" style="color: #ff9800;"></i> Jarayonda
-                            {% else %}
-                            <i class="fas fa-lock" style="color: #ccc;"></i> Qulflangan
-                            {% endif %}
-                        </span>
                         {% if dars.kategoriya %}
                         <span><i class="fas fa-folder"></i> {{ dars.kategoriya.nomi }}</span>
                         {% endif %}
@@ -50,7 +41,7 @@
             <!-- Dars mazmuni -->
             <section class="section">
                 <div class="dars-detail-content">
-                    {{ dars.mazmun|safe }}
+                    {{ mazmun_html }}
                 </div>
             </section>
 
@@ -66,13 +57,6 @@
                                 <span class="dars-icon" style="background: {{ top.rang|default:'#f3f4f6' }};">{{ top.icon|default:'📝' }}</span>
                                 Topshiriq
                             </div>
-                            {% if top.foiz >= 100 %}
-                            <span class="dars-badge done">Tugallangan</span>
-                            {% elif top.foiz > 0 %}
-                            <span class="dars-badge progress">Jarayonda</span>
-                            {% else %}
-                            <span class="dars-badge locked">Yangi</span>
-                            {% endif %}
                         </div>
                         <h3 class="dars-card-title">{{ top.nomi }}</h3>
                         <p class="dars-card-desc">{{ top.tavsif|default:"Bu topshiriq orqali bilimingizni sinab ko'ring." }}</p>

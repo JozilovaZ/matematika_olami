@@ -32,9 +32,6 @@
                                     <span class="dars-icon" style="background:{{ dars.rang|default:'#f3f4f6' }};">{{ dars.icon }}</span>
                                     Dars {{ dars.raqam }}
                                 </div>
-                                {% if dars.holat == 'tugallangan' %}<span class="dars-badge done">Tugallangan</span>
-                                {% elif dars.holat == 'jarayonda' %}<span class="dars-badge progress">Jarayonda</span>
-                                {% else %}<span class="dars-badge locked">Qulflangan</span>{% endif %}
                             </div>
                             <h3 class="dars-card-title">{{ dars.nomi }}</h3>
                             <p class="dars-card-desc">{{ dars.tavsif }}</p>

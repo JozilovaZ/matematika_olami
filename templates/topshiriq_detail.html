@@ -34,6 +34,7 @@
             <!-- Test formasi -->
             <form method="post" action="{% url 'topshiriq_tekshirish' topshiriq.pk %}">
                 {% csrf_token %}
+                <input type="hidden" name="savol_idlar" value="{{ savol_idlar }}">
 
                 {% for savol in savollar %}
                 <section class="section">
