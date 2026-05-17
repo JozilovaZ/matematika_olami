@@ -733,9 +733,11 @@ def musobaqa_tekshirish(request, pk):
 @oqituvchi_talab
 def oqituvchi_kategoriya_qoshish(request):
     if request.method == 'POST':
+        from django.db.models import Max as _Max
+        oxirgi = (Kategoriya.objects.aggregate(m=_Max('tartib'))['m'] or 0) + 1
         Kategoriya.objects.create(
             nomi=request.POST.get('nomi', '').strip(),
-            tartib=int(request.POST.get('tartib', 0)),
+            tartib=oxirgi,
         )
         messages.success(request, 'Kategoriya qo\'shildi.')
         return redirect('bosh_sahifa')
@@ -749,7 +751,6 @@ def oqituvchi_kategoriya_tahrirlash(request, pk):
     obj = get_object_or_404(Kategoriya, pk=pk)
     if request.method == 'POST':
         obj.nomi = request.POST.get('nomi', '').strip()
-        obj.tartib = int(request.POST.get('tartib', 0))
         obj.save()
         messages.success(request, 'Kategoriya yangilandi.')
         return redirect('bosh_sahifa')
@@ -772,13 +773,15 @@ def oqituvchi_kategoriya_ochirish(request, pk):
 @oqituvchi_talab
 def oqituvchi_mavzu_qoshish(request):
     if request.method == 'POST':
+        from django.db.models import Max as _Max
+        oxirgi = (Mavzu.objects.aggregate(m=_Max('tartib'))['m'] or 0) + 1
         Mavzu.objects.create(
             raqam=request.POST.get('raqam', '').strip(),
             nomi=request.POST.get('nomi', '').strip(),
             tavsif=request.POST.get('tavsif', '').strip(),
             rang=request.POST.get('rang', '#e8f5e9'),
             icon=request.POST.get('icon', '').strip(),
-            tartib=int(request.POST.get('tartib', 0)),
+            tartib=oxirgi,
         )
         messages.success(request, 'Mavzu qo\'shildi.')
         return redirect('bosh_sahifa')
@@ -796,7 +799,6 @@ def oqituvchi_mavzu_tahrirlash(request, pk):
         obj.tavsif = request.POST.get('tavsif', '').strip()
         obj.rang = request.POST.get('rang', '#e8f5e9')
         obj.icon = request.POST.get('icon', '').strip()
-        obj.tartib = int(request.POST.get('tartib', 0))
         obj.save()
         messages.success(request, 'Mavzu yangilandi.')
         return redirect('bosh_sahifa')
@@ -880,6 +882,8 @@ def oqituvchi_dars_ochirish(request, pk):
 @oqituvchi_talab
 def oqituvchi_topshiriq_qoshish(request):
     if request.method == 'POST':
+        from django.db.models import Max as _Max
+        oxirgi = (Topshiriq.objects.aggregate(m=_Max('tartib'))['m'] or 0) + 1
         topshiriq = Topshiriq.objects.create(
             nomi=request.POST.get('nomi', '').strip(),
             tavsif=request.POST.get('tavsif', '').strip(),
@@ -887,7 +891,7 @@ def oqituvchi_topshiriq_qoshish(request):
             rang=request.POST.get('rang', '#e8f5e9'),
             turi=request.POST.get('turi', 'kichik'),
             rasm_url=request.POST.get('rasm_url', ''),
-            tartib=int(request.POST.get('tartib', 0)),
+            tartib=oxirgi,
         )
         messages.success(request, f'"{topshiriq.nomi}" topshirig\'i qo\'shildi.')
         return redirect('oqituvchi_topshiriq_tahrirlash', pk=topshiriq.pk)
@@ -906,7 +910,6 @@ def oqituvchi_topshiriq_tahrirlash(request, pk):
         topshiriq.rang = request.POST.get('rang', '#e8f5e9')
         topshiriq.turi = request.POST.get('turi', 'kichik')
         topshiriq.rasm_url = request.POST.get('rasm_url', '')
-        topshiriq.tartib = int(request.POST.get('tartib', 0))
         topshiriq.save()
         messages.success(request, f'"{topshiriq.nomi}" topshirig\'i yangilandi.')
         return redirect('oqituvchi_topshiriq_tahrirlash', pk=topshiriq.pk)
