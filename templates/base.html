@@ -94,14 +94,14 @@
                     <i class="fas fa-trophy"></i>
                     <span>Yutuqlar</span>
                 </a>
-                <a href="{% url 'sozlamalar' %}" class="nav-item {% if request.resolver_match.url_name == 'sozlamalar' %}active{% endif %}">
-                    <i class="fas fa-cog"></i>
-                    <span>Sozlamalar</span>
-                </a>
                 {% if user.is_authenticated and user.profil.rol == 'oqituvchi' %}
                 <a href="{% url 'oqituvchi_oquvchilar' %}" class="nav-item {% if request.resolver_match.url_name == 'oqituvchi_oquvchilar' %}active{% endif %}">
                     <i class="fas fa-users"></i>
                     <span>O'quvchilar</span>
+                </a>
+                <a href="/admin/" class="nav-item">
+                    <i class="fas fa-user-shield"></i>
+                    <span>Admin panel</span>
                 </a>
                 {% endif %}
             </nav>
@@ -211,9 +211,6 @@
         </a>
         <a href="{% url 'statistika' %}" class="mob-nav-item {% if request.resolver_match.url_name == 'statistika' %}mob-nav-active{% endif %}">
             <i class="fas fa-chart-bar"></i><span>Statistika</span>
-        </a>
-        <a href="{% url 'sozlamalar' %}" class="mob-nav-item {% if request.resolver_match.url_name == 'sozlamalar' %}mob-nav-active{% endif %}">
-            <i class="fas fa-cog"></i><span>Sozlama</span>
         </a>
     </nav>
 
