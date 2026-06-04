@@ -479,3 +479,34 @@ class DarajaSozlamasi(models.Model):
 
     def __str__(self):
         return f"{self.nomi} ({self.kerakli_ball} ball)"
+
+
+class Adabiyot(models.Model):
+    nomi = models.CharField(max_length=300)
+    tavsif = models.TextField(blank=True)
+    fayl = models.FileField(upload_to='adabiyotlar/', help_text="PDF yoki boshqa hujjat")
+    tartib = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ['tartib']
+        verbose_name = 'Adabiyot'
+        verbose_name_plural = 'Adabiyotlar'
+
+    def __str__(self):
+        return self.nomi
+
+
+class VideoDars(models.Model):
+    nomi = models.CharField(max_length=300)
+    tavsif = models.TextField(blank=True)
+    youtube_id = models.CharField(max_length=40, help_text="YouTube video ID (masalan: NHolzMgaqwE)")
+    davomiylik = models.CharField(max_length=50, blank=True)
+    tartib = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ['tartib']
+        verbose_name = 'Video dars'
+        verbose_name_plural = 'Video darslar'
+
+    def __str__(self):
+        return self.nomi

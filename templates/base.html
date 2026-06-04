@@ -64,13 +64,27 @@
                     <i class="fas fa-book"></i>
                     <span>Ma`ruzalar</span>
                 </a>
+
+                <a href="{% url 'amaliylar' %}" class="nav-item {% if request.resolver_match.url_name == 'amaliylar' or request.resolver_match.url_name == 'dars_amaliy' %}active{% endif %}">
+                    <i class="fas fa-flask"></i>
+                    <span>Amaliy ko'rsatma</span>
+                </a>
                 <a href="{% url 'taqdimotlar' %}" class="nav-item {% if request.resolver_match.url_name == 'taqdimotlar' or request.resolver_match.url_name == 'dars_taqdimot' %}active{% endif %}">
                     <i class="fas fa-display"></i>
                     <span>Taqdimot</span>
                 </a>
+                <a href="{% url 'video_darslar' %}" class="nav-item {% if request.resolver_match.url_name == 'video_darslar' %}active{% endif %}">
+                    <i class="fas fa-circle-play"></i>
+                    <span>Video darslar</span>
+                </a>
+
                 <a href="{% url 'topshiriqlar' %}" class="nav-item {% if request.resolver_match.url_name == 'topshiriqlar' %}active{% endif %}">
                     <i class="fas fa-clipboard-list"></i>
-                    <span>Amaliyotlar</span>
+                    <span>Testlar</span>
+                </a>
+                <a href="{% url 'adabiyotlar' %}" class="nav-item {% if request.resolver_match.url_name == 'adabiyotlar' %}active{% endif %}">
+                    <i class="fas fa-book-open"></i>
+                    <span>Adabiyot</span>
                 </a>
                 <a href="{% url 'statistika' %}" class="nav-item {% if request.resolver_match.url_name == 'statistika' %}active{% endif %}">
                     <i class="fas fa-chart-bar"></i>

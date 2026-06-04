@@ -82,7 +82,22 @@
             {% if amaliy_html %}
             <section class="section dars-tab-panel" data-panel="amaliy">
                 <h2 class="section-title"><i class="fas fa-flask"></i> Amaliy-uslubiy ko'rsatma</h2>
-                <div class="dars-detail-content">{{ amaliy_html }}</div>
+                <div class="darslar-grid">
+                    <a href="{% url 'dars_amaliy' dars.pk %}" class="dars-card">
+                        <div class="dars-card-top">
+                            <div class="dars-card-subj">
+                                <span class="dars-icon" style="background:#e8f5e9;">🧪</span>
+                                Amaliy ko'rsatma
+                            </div>
+                        </div>
+                        <h3 class="dars-card-title">{{ dars.nomi }} — amaliy qism</h3>
+                        <p class="dars-card-desc">ArcGIS / QGIS bo'yicha bosqichma-bosqich uslubiy ko'rsatma.</p>
+                        <div class="dars-card-bottom">
+                            <span class="dars-card-meta"><i class="fas fa-list-check"></i> Qadamlar</span>
+                            <span class="dars-card-btn">Ochish <i class="fas fa-arrow-right"></i></span>
+                        </div>
+                    </a>
+                </div>
             </section>
             {% endif %}
 

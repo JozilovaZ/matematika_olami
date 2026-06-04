@@ -14,7 +14,7 @@ from .models import (
     KuchsizSoha, HaftalikFaoliyat, Modul, Yutuq, KunlikSovrin,
     OtaOnaMaslahat, UmumiyStatistika, Profil, OquvSozlama,
     BildirishnomaSozlamasi, Tema, XavfsizlikSozlamasi, DarajaSozlamasi,
-    SongiFaoliyat, TestNatija,
+    SongiFaoliyat, TestNatija, Adabiyot, VideoDars,
 )
 
 
@@ -251,6 +251,46 @@ def dars_taqdimot(request, pk):
         'stat': stat,
     }
     return render(request, 'taqdimot_detail.html', context)
+
+
+def amaliylar(request):
+    stat = UmumiyStatistika.get()
+    darslar_list = Dars.objects.exclude(amaliy_uslubiy='')
+    context = {
+        'darslar': darslar_list,
+        'stat': stat,
+    }
+    return render(request, 'amaliylar.html', context)
+
+
+def adabiyotlar(request):
+    stat = UmumiyStatistika.get()
+    context = {
+        'adabiyotlar': Adabiyot.objects.all(),
+        'stat': stat,
+    }
+    return render(request, 'adabiyotlar.html', context)
+
+
+def video_darslar(request):
+    stat = UmumiyStatistika.get()
+    context = {
+        'videolar': VideoDars.objects.all(),
+        'stat': stat,
+    }
+    return render(request, 'video_darslar.html', context)
+
+
+def dars_amaliy(request, pk):
+    from django.utils.safestring import mark_safe as _mark_safe
+    dars = get_object_or_404(Dars, pk=pk)
+    stat = UmumiyStatistika.get()
+    context = {
+        'dars': dars,
+        'amaliy_html': _mark_safe(dars.amaliy_uslubiy) if dars.amaliy_uslubiy else '',
+        'stat': stat,
+    }
+    return render(request, 'amaliy_detail.html', context)
 
 
 def topshiriqlar(request):

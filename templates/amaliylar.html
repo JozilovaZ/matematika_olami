@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}Amaliy ko'rsatmalar - Geoaxborot Texnologiyalari{% endblock %}
+
+{% block content %}
+            <section class="section">
+                <h2 class="section-title"><i class="fas fa-flask"></i> Amaliy-uslubiy ko'rsatmalar</h2>
+                <p style="color:#6b7280; margin:-8px 0 18px;">Har bir mavzu bo'yicha ArcGIS / QGIS amaliyotining bosqichma-bosqich qo'llanmasi.</p>
+                <div class="darslar-grid">
+                    {% for dars in darslar %}
+                    <a href="{% url 'dars_amaliy' dars.pk %}" class="dars-card tc-body">
+                        <div class="dars-card-top">
+                            <div class="dars-card-subj">
+                                <span class="dars-icon" style="background:#e8f5e9;">🧪</span>
+                                {{ dars.raqam }}-mavzu
+                            </div>
+                        </div>
+                        <h3 class="dars-card-title">{{ dars.nomi }}</h3>
+                        <p class="dars-card-desc">Amaliy-uslubiy ko'rsatma — bosqichma-bosqich qadamlar va izohlar.</p>
+                        <div class="dars-card-bottom">
+                            <span class="dars-card-meta"><i class="fas fa-list-check"></i> Qadamlar</span>
+                            <span class="dars-card-btn">Ochish <i class="fas fa-arrow-right"></i></span>
+                        </div>
+                    </a>
+                    {% empty %}
+                    <p style="color:#6b7280;">Hozircha amaliy ko'rsatmalar qo'shilmagan.</p>
+                    {% endfor %}
+                </div>
+            </section>
+{% endblock %}
+
+{% block activity_title %}Amaliy ko'rsatmalar{% endblock %}
+
+{% block activity_content %}
+                <div class="activity-item">
+                    <div class="activity-dot" style="background: #1a936f;"></div>
+                    <span>{{ darslar.count }} ta amaliy ko'rsatma</span>
+                </div>
+                <div class="activity-item">
+                    <div class="activity-dot" style="background: #f0a500;"></div>
+                    <span>ArcGIS / QGIS bo'yicha</span>
+                </div>
+{% endblock %}

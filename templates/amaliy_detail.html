@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ dars.nomi }} - Amaliy ko'rsatma{% endblock %}
+
+{% block content %}
+            <!-- Orqaga tugmasi -->
+            <div class="detail-nav">
+                <a href="{% url 'dars_detail' dars.pk %}" class="detail-back-btn">
+                    <i class="fas fa-arrow-left"></i> Mavzuga qaytish
+                </a>
+            </div>
+
+            <!-- Sarlavha -->
+            <div class="dars-detail-header" style="background: {{ dars.rang|default:'#e8f5e9' }}">
+                <div class="dars-detail-icon"><i class="fas fa-flask"></i></div>
+                <div class="dars-detail-info">
+                    <span class="dars-detail-number">{{ dars.raqam }}-mavzu</span>
+                    <h1>Amaliy-uslubiy ko'rsatma</h1>
+                    <p>{{ dars.nomi }}</p>
+                </div>
+            </div>
+
+            <!-- Kontent -->
+            <section class="section">
+                {% if amaliy_html %}
+                <div class="dars-detail-content">{{ amaliy_html }}</div>
+                {% else %}
+                <div class="savol-card">
+                    <p style="text-align:center; color:#999; padding:40px;">
+                        <i class="fas fa-flask" style="font-size:48px; display:block; margin-bottom:16px;"></i>
+                        Bu mavzuda amaliy ko'rsatma qo'shilmagan
+                    </p>
+                </div>
+                {% endif %}
+            </section>
+
+<style>
+.dars-detail-content{line-height:1.75;color:#374151}
+.w-doc{background:#fff;max-width:820px;margin:0 auto;padding:54px 64px;border:1px solid #e5e7eb;border-radius:6px;box-shadow:0 4px 18px rgba(0,0,0,.10);font-family:'Times New Roman',Georgia,serif;font-size:14pt;line-height:1.5;color:#000}
+.w-doc p{margin:0 0 8pt}
+.w-doc .w-h{margin:16pt 0 8pt;font-weight:bold}
+.w-doc .w-img{max-width:100%;height:auto;display:inline-block;margin:6px 2px}
+.w-doc .w-li{position:relative;display:flex;gap:.5em;margin-bottom:6pt;align-items:baseline}
+.w-doc .w-marker{flex:0 0 auto;min-width:1.4em}
+.w-doc .w-litext{flex:1 1 auto}
+.w-table{border-collapse:collapse;width:100%;margin:14px 0;font-size:13pt;font-family:'Times New Roman',serif}
+.w-table td{border:1px solid #000;padding:5px 8px;vertical-align:top}
+.w-table td p{margin:0 0 4px}
+.w-table td p:last-child{margin-bottom:0}
+@media(max-width:640px){.w-doc{padding:24px 18px;font-size:12.5pt}}
+</style>
+{% endblock %}
+
+{% block right_sidebar %}
+            <div class="recent-activity">
+                <h4>Amaliy ko'rsatma</h4>
+                <div class="activity-item">
+                    <div class="activity-dot" style="background: #1a936f;"></div>
+                    <span>{{ dars.raqam }}-mavzu</span>
+                </div>
+                <div class="activity-item">
+                    <div class="activity-dot" style="background: #f0a500;"></div>
+                    <span>ArcGIS / QGIS bo'yicha qadamlar</span>
+                </div>
+            </div>
+{% endblock %}

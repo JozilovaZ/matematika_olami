@@ -5,8 +5,22 @@ from .models import (
     KuchsizSoha, HaftalikFaoliyat, Modul, Yutuq, KunlikSovrin,
     OtaOnaMaslahat, UmumiyStatistika, Profil, OquvSozlama,
     BildirishnomaSozlamasi, Tema, XavfsizlikSozlamasi, DarajaSozlamasi,
-    SongiFaoliyat, TestNatija,
+    SongiFaoliyat, TestNatija, Adabiyot, VideoDars,
 )
+
+
+@admin.register(Adabiyot)
+class AdabiyotAdmin(admin.ModelAdmin):
+    list_display = ['nomi', 'fayl', 'tartib']
+    list_editable = ['tartib']
+    ordering = ['tartib']
+
+
+@admin.register(VideoDars)
+class VideoDarsAdmin(admin.ModelAdmin):
+    list_display = ['nomi', 'youtube_id', 'tartib']
+    list_editable = ['tartib']
+    ordering = ['tartib']
 
 
 @admin.register(Kategoriya)
