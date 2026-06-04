@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+
+{% block title %}O'quvchilar - Geoaxborot Texnologiyalari{% endblock %}
+
+{% block content %}
+            <div class="stat-page-header">
+                <div>
+                    <h1 class="stat-page-title">O'quvchilar</h1>
+                    <p class="stat-page-subtitle">Ro'yxatdan o'tgan o'quvchilar va ularning natijalari</p>
+                </div>
+                <div class="stat-overall-badge">
+                    <i class="fas fa-users"></i>
+                    <span>{{ oquvchilar_soni }} o'quvchi</span>
+                </div>
+            </div>
+
+            <!-- Umumiy ko'rsatkichlar -->
+            <div class="stat-summary-grid">
+                <div class="stat-summary-card">
+                    <div class="stat-summary-icon" style="background:#e3f6ef; color:#1a936f;">
+                        <i class="fas fa-user-graduate"></i>
+                    </div>
+                    <div class="stat-summary-info">
+                        <span class="stat-summary-value">{{ oquvchilar_soni }}</span>
+                        <span class="stat-summary-label">Ro'yxatdan o'tgan</span>
+                    </div>
+                </div>
+                <div class="stat-summary-card">
+                    <div class="stat-summary-icon" style="background:#e3f6ef; color:#1a936f;">
+                        <i class="fas fa-user-check"></i>
+                    </div>
+                    <div class="stat-summary-info">
+                        <span class="stat-summary-value">{{ faol_soni }}</span>
+                        <span class="stat-summary-label">Test yechgan</span>
+                    </div>
+                </div>
+                <div class="stat-summary-card">
+                    <div class="stat-summary-icon" style="background:#fff3e0; color:#f0a500;">
+                        <i class="fas fa-clipboard-check"></i>
+                    </div>
+                    <div class="stat-summary-info">
+                        <span class="stat-summary-value">{{ jami_testlar }}</span>
+                        <span class="stat-summary-label">Jami yechilgan test</span>
+                    </div>
+                </div>
+                <div class="stat-summary-card">
+                    <div class="stat-summary-icon" style="background:#fce4ec; color:#e91e63;">
+                        <i class="fas fa-percentage"></i>
+                    </div>
+                    <div class="stat-summary-info">
+                        <span class="stat-summary-value">{{ umumiy_ortacha }}%</span>
+                        <span class="stat-summary-label">Umumiy o'rtacha</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- O'quvchilar jadvali -->
+            <section class="section">
+                <h2 class="section-title">O'quvchilar ro'yxati</h2>
+                {% if oquvchilar %}
+                <div class="oq-table-wrap">
+                    <table class="oq-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>O'quvchi</th>
+                                <th>Username</th>
+                                <th>Ro'yxatdan o'tgan</th>
+                                <th>Testlar</th>
+                                <th>O'rtacha</th>
+                                <th>Oxirgi faollik</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for o in oquvchilar %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>
+                                    <div class="oq-user">
+                                        <span class="oq-avatar"><i class="fas fa-user"></i></span>
+                                        <div>
+                                            <strong>{{ o.profil.ism }} {{ o.profil.familiya }}</strong>
+                                            <span class="oq-email">{{ o.profil.email }}</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>{{ o.user.username }}</td>
+                                <td>{{ o.royxatdan|date:"d.m.Y" }}</td>
+                                <td><span class="oq-badge">{{ o.testlar_soni }}</span></td>
+                                <td>
+                                    {% if o.testlar_soni %}
+                                    <span class="oq-score {% if o.ortacha >= 80 %}oq-good{% elif o.ortacha >= 50 %}oq-mid{% else %}oq-low{% endif %}">{{ o.ortacha }}%</span>
+                                    {% else %}
+                                    <span style="color:#9ca3af;">—</span>
+                                    {% endif %}
+                                </td>
+                                <td>{% if o.oxirgi_faollik %}{{ o.oxirgi_faollik|date:"d.m.Y H:i" }}{% else %}<span style="color:#9ca3af;">—</span>{% endif %}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="test-empty">
+                    <i class="fas fa-user-slash"></i>
+                    <h3>Hali o'quvchilar ro'yxatdan o'tmagan</h3>
+                </div>
+                {% endif %}
+            </section>
+
+<style>
+.oq-table-wrap{background:#fff;border:1px solid #eef0f3;border-radius:16px;overflow-x:auto;box-shadow:0 2px 10px rgba(0,0,0,.04)}
+.oq-table{width:100%;border-collapse:collapse;font-size:14px;min-width:720px}
+.oq-table thead th{text-align:left;padding:14px 16px;background:#f7faf9;color:#6b7280;font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #eef0f3}
+.oq-table tbody td{padding:13px 16px;border-bottom:1px solid #f1f3f5;color:#374151;vertical-align:middle}
+.oq-table tbody tr:last-child td{border-bottom:none}
+.oq-table tbody tr:hover{background:#fafdfb}
+.oq-user{display:flex;align-items:center;gap:10px}
+.oq-avatar{width:36px;height:36px;border-radius:50%;background:#1a936f;color:#fff;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.oq-user strong{display:block;color:#111827}
+.oq-email{font-size:12px;color:#9ca3af}
+.oq-badge{display:inline-block;min-width:26px;text-align:center;background:#e3f6ef;color:#1a936f;font-weight:700;padding:3px 9px;border-radius:8px}
+.oq-score{font-weight:700;padding:3px 10px;border-radius:8px}
+.oq-good{background:#e3f6ef;color:#1a936f}
+.oq-mid{background:#fff3e0;color:#f0a500}
+.oq-low{background:#fdecec;color:#e53935}
+</style>
+{% endblock %}
+
+{% block activity_title %}O'quvchilar{% endblock %}
+
+{% block activity_content %}
+                <div class="activity-item">
+                    <div class="activity-dot" style="background:#1a936f;"></div>
+                    <span>{{ oquvchilar_soni }} ta ro'yxatdan o'tgan</span>
+                </div>
+                <div class="activity-item">
+                    <div class="activity-dot" style="background:#f0a500;"></div>
+                    <span>{{ faol_soni }} ta test yechgan</span>
+                </div>
+{% endblock %}

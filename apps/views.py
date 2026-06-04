@@ -121,15 +121,58 @@ def chiqish(request):
     return redirect('kirish')
 
 
+def oqituvchi_oquvchilar(request):
+    """O'qituvchi uchun: ro'yxatdan o'tgan o'quvchilar ro'yxati va statistikasi."""
+    if not request.user.is_authenticated:
+        return redirect('kirish')
+    if not hasattr(request.user, 'profil') or request.user.profil.rol != 'oqituvchi':
+        messages.error(request, "Bu sahifaga faqat o'qituvchilar kira oladi.")
+        return redirect('bosh_sahifa')
+
+    profillar = (
+        Profil.objects.filter(rol='oquvchi', user__isnull=False)
+        .select_related('user')
+        .order_by('-user__date_joined')
+    )
+
+    oquvchilar = []
+    jami_testlar = 0
+    foizlar = []
+    for p in profillar:
+        natijalar = TestNatija.objects.filter(user=p.user)
+        testlar_soni = natijalar.count()
+        ortacha = int(natijalar.aggregate(a=Avg('foiz'))['a'] or 0)
+        oxirgi_natija = natijalar.order_by('-sana').first()
+        jami_testlar += testlar_soni
+        if testlar_soni:
+            foizlar.append(ortacha)
+        oquvchilar.append({
+            'profil': p,
+            'user': p.user,
+            'testlar_soni': testlar_soni,
+            'ortacha': ortacha,
+            'oxirgi_faollik': oxirgi_natija.sana if oxirgi_natija else p.user.last_login,
+            'royxatdan': p.user.date_joined,
+        })
+
+    context = {
+        'oquvchilar': oquvchilar,
+        'oquvchilar_soni': len(oquvchilar),
+        'jami_testlar': jami_testlar,
+        'umumiy_ortacha': int(sum(foizlar) / len(foizlar)) if foizlar else 0,
+        'faol_soni': sum(1 for o in oquvchilar if o['testlar_soni'] > 0),
+    }
+    return render(request, 'oqituvchi/oquvchilar.html', context)
+
+
 def bosh_sahifa(request):
     if not request.user.is_authenticated:
         return redirect('royxatdan_otish')
     stat = UmumiyStatistika.get()
     context = {
-        'mavzular': Mavzu.objects.all(),
-        'kuchsiz_sohalar': KuchsizSoha.objects.all(),
-        'musobaqalar': Musobaqa.objects.all(),
-        'reyting': ReytingOyinchi.objects.all(),
+        'darslar_soni': Dars.objects.count(),
+        'test_soni': Topshiriq.objects.count(),
+        'savol_soni': Savol.objects.count(),
         'stat': stat,
         'songgi_faoliyat': SongiFaoliyat.objects.filter(sahifa='bosh_sahifa'),
     }
@@ -176,12 +219,38 @@ def dars_detail(request, pk):
     context = {
         'dars': dars,
         'mazmun_html': mazmun_html,
+        'nazariy_html': _mark_safe(dars.nazariy) if dars.nazariy else '',
+        'taqdimot_html': _mark_safe(dars.taqdimot) if dars.taqdimot else '',
+        'amaliy_html': _mark_safe(dars.amaliy_uslubiy) if dars.amaliy_uslubiy else '',
+        'topshiriq_matni_html': _mark_safe(dars.topshiriq_matni) if dars.topshiriq_matni else '',
         'stat': stat,
         'oldingi': oldingi,
         'keyingi': keyingi,
         'topshiriqlar': topshiriqlar,
     }
     return render(request, 'dars_detail.html', context)
+
+
+def taqdimotlar(request):
+    stat = UmumiyStatistika.get()
+    darslar_list = Dars.objects.exclude(taqdimot='', taqdimot_fayl='')
+    context = {
+        'darslar': darslar_list,
+        'stat': stat,
+    }
+    return render(request, 'taqdimotlar.html', context)
+
+
+def dars_taqdimot(request, pk):
+    from django.utils.safestring import mark_safe as _mark_safe
+    dars = get_object_or_404(Dars, pk=pk)
+    stat = UmumiyStatistika.get()
+    context = {
+        'dars': dars,
+        'taqdimot_html': _mark_safe(dars.taqdimot) if dars.taqdimot else '',
+        'stat': stat,
+    }
+    return render(request, 'taqdimot_detail.html', context)
 
 
 def topshiriqlar(request):
@@ -349,10 +418,12 @@ def _modullar_hisoblash():
         ('#f3e5f5', '#9c27b0'),
         ('#e0f7fa', '#00bcd4'),
     ]
-    ikonlar = ['📐', '➕', '✖️', '📊', '📏', '🔢']
+    ikonlar = ['🌍', '🗺️', '📍', '🛰️', '🧭', '📊']
 
     natija = []
-    for i, kat in enumerate(Kategoriya.objects.all()):
+    # Faqat darsi mavjud kategoriyalar ko'rsatiladi
+    kategoriyalar = [k for k in Kategoriya.objects.all() if k.darslar.exists()]
+    for i, kat in enumerate(kategoriyalar):
         agr = TestNatija.objects.filter(
             topshiriq__dars__kategoriya=kat
         ).aggregate(ort=Avg('foiz'), soni=Count('id'))

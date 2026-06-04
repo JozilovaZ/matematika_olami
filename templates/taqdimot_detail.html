@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ dars.nomi }} - Taqdimot{% endblock %}
+
+{% block content %}
+            <!-- Orqaga tugmasi -->
+            <div class="detail-nav">
+                <a href="{% url 'dars_detail' dars.pk %}" class="detail-back-btn">
+                    <i class="fas fa-arrow-left"></i> Mavzuga qaytish
+                </a>
+            </div>
+
+            <!-- Sarlavha -->
+            <div class="dars-detail-header" style="background: {{ dars.rang|default:'#e3f2fd' }}">
+                <div class="dars-detail-icon"><i class="fas fa-display"></i></div>
+                <div class="dars-detail-info">
+                    <span class="dars-detail-number">{{ dars.raqam }}-mavzu</span>
+                    <h1>Taqdimot</h1>
+                    <p>{{ dars.nomi }}</p>
+                    <div class="dars-detail-meta">
+                        {% if dars.taqdimot_fayl %}
+                        <a href="{{ dars.taqdimot_fayl.url }}" class="dars-download-btn" download>
+                            <i class="fas fa-download"></i> Faylni yuklab olish (.pptx)
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slaydlar -->
+            <section class="section">
+                {% if taqdimot_html %}
+                <div class="dars-detail-content slides">{{ taqdimot_html }}</div>
+                {% else %}
+                <div class="savol-card">
+                    <p style="text-align:center; color:#999; padding:40px;">
+                        <i class="fas fa-display" style="font-size:48px; display:block; margin-bottom:16px;"></i>
+                        Bu mavzuda taqdimot qo'shilmagan
+                    </p>
+                </div>
+                {% endif %}
+            </section>
+
+<style>
+.pp-slide{margin:0 0 26px}
+.pp-num{font-size:12px;font-weight:700;color:#1a936f;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.pp-canvas{container-type:inline-size;position:relative;width:100%;background:#fff;border:1px solid #e5e7eb;border-radius:10px;overflow:hidden;box-shadow:0 4px 14px rgba(0,0,0,.10)}
+.pp-box{position:absolute;overflow:hidden;box-sizing:border-box;padding:0 .4cqw}
+.pp-box p{margin:0;line-height:1.15;font-size:2.2cqw}
+.pp-pic{position:absolute;object-fit:cover}
+.dars-download-btn{display:inline-flex;align-items:center;gap:8px;background:#1a936f;color:#fff;padding:9px 16px;border-radius:10px;font-weight:600;text-decoration:none;transition:.2s}
+.dars-download-btn:hover{background:#147a5c}
+</style>
+{% endblock %}
+
+{% block right_sidebar %}
+            <div class="recent-activity">
+                <h4>Taqdimot</h4>
+                <div class="activity-item">
+                    <div class="activity-dot" style="background: #1a936f;"></div>
+                    <span>{{ dars.raqam }}-mavzu</span>
+                </div>
+                <div class="activity-item">
+                    <div class="activity-dot" style="background: #2196f3;"></div>
+                    <span>Slaydlarni ketma-ket ko'ring</span>
+                </div>
+                {% if dars.taqdimot_fayl %}
+                <div class="activity-item">
+                    <div class="activity-dot" style="background: #ff9800;"></div>
+                    <span>Faylni yuklab olish mumkin</span>
+                </div>
+                {% endif %}
+            </div>
+{% endblock %}

@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Statistika - Matematika Olami{% endblock %}
+{% block title %}Statistika - Geoaxborot Texnologiyalari{% endblock %}
 
 {% block content %}
             <!-- Sarlavha -->
@@ -19,7 +19,7 @@
             <!-- Umumiy statistika kartlari -->
             <div class="stat-summary-grid">
                 <div class="stat-summary-card">
-                    <div class="stat-summary-icon" style="background: #e8f5e9; color: #4caf50;">
+                    <div class="stat-summary-icon" style="background: #e3f6ef; color: #1a936f;">
                         <i class="fas fa-clipboard-check"></i>
                     </div>
                     <div class="stat-summary-info">
@@ -37,7 +37,7 @@
                     </div>
                 </div>
                 <div class="stat-summary-card">
-                    <div class="stat-summary-icon" style="background: #e3f2fd; color: #2196f3;">
+                    <div class="stat-summary-icon" style="background: #e3f6ef; color: #1a936f;">
                         <i class="fas fa-check"></i>
                     </div>
                     <div class="stat-summary-info">
@@ -133,7 +133,7 @@
                 </div>
                 <div class="stat-summary-grid" style="margin-top: 16px;">
                     <div class="stat-summary-card">
-                        <div class="stat-summary-icon" style="background: #e8f5e9; color: #4caf50;">
+                        <div class="stat-summary-icon" style="background: #e3f6ef; color: #1a936f;">
                             <i class="fas fa-check-circle"></i>
                         </div>
                         <div class="stat-summary-info">
@@ -188,7 +188,7 @@
                             </div>
                         </div>
                         <div class="progress-bar">
-                            <div class="progress-fill" style="width: {{ ts.ortacha }}%; background: {% if ts.ortacha >= 80 %}#4caf50{% elif ts.ortacha >= 50 %}#ff9800{% else %}#f44336{% endif %};"></div>
+                            <div class="progress-fill" style="width: {{ ts.ortacha }}%; background: {% if ts.ortacha >= 80 %}#1a936f{% elif ts.ortacha >= 50 %}#f0a500{% else %}#f44336{% endif %};"></div>
                         </div>
                     </div>
                     {% endfor %}
@@ -251,31 +251,12 @@
             </section>
             {% endif %}
 
-            <!-- 8. OTA-ONALAR BURCHAGI -->
-            {% if ota_ona_maslahatlar %}
-            <section class="section">
-                <div class="stat-parents-banner">
-                    <div class="stat-parents-header">
-                        <span class="stat-parents-badge"><i class="fas fa-users"></i> Ota-onalar burchagi</span>
-                    </div>
-                    <div class="stat-parents-grid">
-                        {% for maslahat in ota_ona_maslahatlar %}
-                        <div class="stat-parent-card" style="background: {{ maslahat.rang }};">
-                            <div class="stat-parent-icon">{{ maslahat.icon }}</div>
-                            <h4>{{ maslahat.nomi }}</h4>
-                            <p>{{ maslahat.tavsif }}</p>
-                        </div>
-                        {% endfor %}
-                    </div>
-                </div>
-            </section>
-            {% endif %}
 {% endblock %}
 
 {% block right_sidebar %}
             <div class="stats-grid">
                 <div class="stat-item">
-                    <div class="stat-icon" style="background: #e8f5e9; color: #4caf50;">
+                    <div class="stat-icon" style="background: #e3f6ef; color: #1a936f;">
                         <i class="fas fa-clipboard-check"></i>
                     </div>
                     <div class="stat-info">
@@ -293,7 +274,7 @@
                     </div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-icon" style="background: #e3f2fd; color: #2196f3;">
+                    <div class="stat-icon" style="background: #e3f6ef; color: #1a936f;">
                         <i class="fas fa-check"></i>
                     </div>
                     <div class="stat-info">
@@ -316,7 +297,7 @@
                 <h4>Oxirgi natijalar</h4>
                 {% for natija in oxirgi_natijalar|slice:":5" %}
                 <div class="activity-item">
-                    <div class="activity-dot" style="background: {% if natija.foiz >= 80 %}#4caf50{% elif natija.foiz >= 50 %}#ff9800{% else %}#f44336{% endif %};"></div>
+                    <div class="activity-dot" style="background: {% if natija.foiz >= 80 %}#1a936f{% elif natija.foiz >= 50 %}#f0a500{% else %}#f44336{% endif %};"></div>
                     <span>{{ natija.topshiriq.nomi }} - {{ natija.foiz }}%</span>
                 </div>
                 {% empty %}
@@ -336,7 +317,7 @@
     let data = {};
     try { data = JSON.parse(raw.textContent); } catch (e) { data = {}; }
 
-    const palitra = ['#4caf50', '#ff9800', '#2196f3', '#e91e63', '#9c27b0', '#00bcd4', '#ffc107', '#3f51b5'];
+    const palitra = ['#1a936f', '#f0a500', '#2ec4a0', '#e91e63', '#9c27b0', '#00bcd4', '#ffc107', '#3f51b5'];
     const umumiy = { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } };
 
     // 1. Haftalik faoliyat
@@ -347,8 +328,8 @@
             data: {
                 labels: data.haftalik_labels,
                 datasets: [
-                    { label: 'Testlar soni', data: data.haftalik_testlar, backgroundColor: '#4caf50', borderRadius: 8, yAxisID: 'y' },
-                    { label: "O'rtacha %", data: data.haftalik_ortacha, type: 'line', borderColor: '#ff9800', backgroundColor: '#ff9800', tension: 0.3, yAxisID: 'y1' }
+                    { label: 'Testlar soni', data: data.haftalik_testlar, backgroundColor: '#1a936f', borderRadius: 8, yAxisID: 'y' },
+                    { label: "O'rtacha %", data: data.haftalik_ortacha, type: 'line', borderColor: '#f0a500', backgroundColor: '#f0a500', tension: 0.3, yAxisID: 'y1' }
                 ]
             },
             options: {
@@ -371,8 +352,8 @@
                 datasets: [{
                     label: "O'rtacha foiz",
                     data: data.modul_ballar,
-                    backgroundColor: 'rgba(76, 175, 80, 0.25)',
-                    borderColor: '#4caf50',
+                    backgroundColor: 'rgba(26, 147, 111, 0.25)',
+                    borderColor: '#1a936f',
                     pointBackgroundColor: data.modul_ranglar
                 }]
             },
@@ -390,11 +371,11 @@
                 datasets: [{
                     label: 'Foiz',
                     data: data.trend_foizlar,
-                    borderColor: '#2196f3',
-                    backgroundColor: 'rgba(33, 150, 243, 0.15)',
+                    borderColor: '#1a936f',
+                    backgroundColor: 'rgba(26, 147, 111, 0.15)',
                     fill: true,
                     tension: 0.3,
-                    pointBackgroundColor: data.trend_foizlar.map(v => v >= 80 ? '#4caf50' : v >= 50 ? '#ff9800' : '#f44336'),
+                    pointBackgroundColor: data.trend_foizlar.map(v => v >= 80 ? '#1a936f' : v >= 50 ? '#f0a500' : '#f44336'),
                     pointRadius: 5
                 }]
             },
@@ -409,7 +390,7 @@
             type: 'doughnut',
             data: {
                 labels: ['Ajoyib (80%+)', "Yaxshi (50-79%)", 'Yomon (<50%)'],
-                datasets: [{ data: data.taqsimot, backgroundColor: ['#4caf50', '#ff9800', '#f44336'] }]
+                datasets: [{ data: data.taqsimot, backgroundColor: ['#1a936f', '#f0a500', '#f44336'] }]
             },
             options: { ...umumiy, plugins: { ...umumiy.plugins, title: { display: true, text: 'Test sifati' } } }
         });
@@ -422,7 +403,7 @@
             type: 'doughnut',
             data: {
                 labels: ["To'g'ri javoblar", "Noto'g'ri javoblar"],
-                datasets: [{ data: data.javoblar, backgroundColor: ['#2196f3', '#ffcdd2'] }]
+                datasets: [{ data: data.javoblar, backgroundColor: ['#1a936f', '#ffcdd2'] }]
             },
             options: { ...umumiy, plugins: { ...umumiy.plugins, title: { display: true, text: 'Savollarga javob' } } }
         });

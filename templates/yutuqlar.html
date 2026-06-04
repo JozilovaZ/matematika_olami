@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Yutuqlar - Matematika Olami{% endblock %}
+{% block title %}Yutuqlar - Geoaxborot Texnologiyalari{% endblock %}
 
 {% block content %}
 
@@ -27,7 +27,7 @@
         </div>
     </div>
     <div class="stat-summary-card">
-        <div class="stat-summary-icon" style="background:#e8f5e9; color:#4caf50;">
+        <div class="stat-summary-icon" style="background:#e3f6ef; color:#1a936f;">
             <i class="fas fa-star"></i>
         </div>
         <div class="stat-summary-info">
@@ -45,7 +45,7 @@
         </div>
     </div>
     <div class="stat-summary-card">
-        <div class="stat-summary-icon" style="background:#e3f2fd; color:#2196f3;">
+        <div class="stat-summary-icon" style="background:#e3f6ef; color:#1a936f;">
             <i class="fas fa-gem"></i>
         </div>
         <div class="stat-summary-info">
@@ -136,7 +136,7 @@
 {% block activity_content %}
 {% for yutuq in oxirgi_yutuqlar %}
 <div class="activity-item">
-    <div class="activity-dot" style="background:{{ yutuq.progress_rang|default:'#4caf50' }};"></div>
+    <div class="activity-dot" style="background:{{ yutuq.progress_rang|default:'#1a936f' }};"></div>
     <span>{{ yutuq.nomi }} — olingan</span>
 </div>
 {% empty %}

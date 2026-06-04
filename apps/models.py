@@ -50,6 +50,12 @@ class Dars(models.Model):
 
     mazmun = models.TextField(blank=True, help_text="Dars matni (HTML yoki oddiy matn)")
 
+    nazariy = models.TextField(blank=True, help_text="Nazariy qism (HTML)")
+    taqdimot = models.TextField(blank=True, help_text="Taqdimot matni / slaydlar (HTML)")
+    taqdimot_fayl = models.FileField(upload_to='gis/taqdimotlar/', blank=True, null=True, help_text="Taqdimot fayli (.pptx)")
+    amaliy_uslubiy = models.TextField(blank=True, help_text="Amaliy-uslubiy ko'rsatma (HTML)")
+    topshiriq_matni = models.TextField(blank=True, help_text="Topshiriq matni (HTML)")
+
     class Meta:
         ordering = ['tartib']
         verbose_name = 'Dars'

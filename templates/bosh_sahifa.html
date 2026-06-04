@@ -1,151 +1,138 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Matematika Olami{% endblock %}
+{% block title %}Geoaxborot Texnologiyalari{% endblock %}
 
 {% block content %}
             <!-- Hero banner -->
-            <section class="hero-banner">
+            <section class="hero-banner gis-hero">
                 <div class="hero-text">
-                    <h1>Matematikani <br>zabt et!</h1>
-                    <p>Matematikaning qiziqarli dunyosiga sayohat qiling va o'z bilimlaringizni sinab ko'ring</p>
+                    <span class="gis-hero-badge"><i class="fas fa-earth-asia"></i> Masofaviy kurs</span>
+                    <h1>Geoaxborot <br>texnologiyalari</h1>
+                    <p>Fazoviy ma'lumotlar, ArcGIS va QGIS, veb-xaritalash va GIS tahlili — nazariy darslar, taqdimotlar va amaliy topshiriqlar bilan to'liq onlayn kurs.</p>
                     {% if user.is_authenticated %}
-                    <a href="{% url 'darslar' %}" class="btn-primary">Davom etish</a>
+                    <a href="{% url 'darslar' %}" class="btn-primary">Darslarni boshlash <i class="fas fa-arrow-right"></i></a>
                     {% else %}
                     <a href="{% url 'royxatdan_otish' %}" class="btn-primary">Ro'yxatdan o'tish</a>
                     {% endif %}
                 </div>
-                <div class="hero-image">
-                    <img src="https://avatars.mds.yandex.net/i?id=d28d1ce78dd19eed7edc3e4771bee2f24d9c2819-5449291-images-thumbs&n=13" alt="Lion" class="lion-img">
+                <div class="hero-image gis-hero-icon">
+                    <i class="fas fa-earth-asia"></i>
                 </div>
             </section>
 
-            <!-- Ta'lim xaritasi -->
+            <!-- Raqamlar -->
             <section class="section">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-                    <h2 class="section-title" style="margin-bottom:0;">Ta'lim xaritasi fanlari</h2>
-                    {% if request.user.is_authenticated and request.user.profil.rol == 'oqituvchi' %}
-                    <a href="{% url 'oqituvchi_mavzu_qoshish' %}" class="btn-primary" style="border:none; cursor:pointer; text-decoration:none; font-size:13px;">
-                        <i class="fas fa-plus"></i> Yangi mavzu
+                <div class="gis-stats">
+                    <div class="gis-stat"><span class="gis-stat-num">{{ darslar_soni }}</span><span class="gis-stat-lbl">Mavzu (dars)</span></div>
+                    <div class="gis-stat"><span class="gis-stat-num">{{ test_soni }}</span><span class="gis-stat-lbl">Test to'plami</span></div>
+                    <div class="gis-stat"><span class="gis-stat-num">{{ savol_soni }}</span><span class="gis-stat-lbl">Test savoli</span></div>
+                    <div class="gis-stat"><span class="gis-stat-num">4</span><span class="gis-stat-lbl">Material turi</span></div>
+                </div>
+            </section>
+
+            <!-- Kursda nimalar bor -->
+            <section class="section">
+                <h2 class="section-title">Kursda nimalar bor?</h2>
+                <p class="gis-lead">Har bir mavzu to'rt xil material bilan to'liq yoritilgan — nazariyadan amaliyotgacha:</p>
+                <div class="gis-cards">
+                    <div class="gis-card">
+                        <div class="gis-ic" style="background:#e3f6ef;color:#1a936f;"><i class="fas fa-book"></i></div>
+                        <h3>Nazariy qism</h3>
+                        <p>Mavzuning to'liq nazariy matni — ta'riflar, tushunchalar, rasmlar va misollar bilan, xuddi darslikdagidek.</p>
+                    </div>
+                    <div class="gis-card">
+                        <div class="gis-ic" style="background:#fff3e0;color:#f57c00;"><i class="fas fa-display"></i></div>
+                        <h3>Taqdimot</h3>
+                        <p>Mavzu bo'yicha slaydlar — PowerPointdagidek ko'rinishda. Asl faylni yuklab olish ham mumkin.</p>
+                    </div>
+                    <div class="gis-card">
+                        <div class="gis-ic" style="background:#e8f5e9;color:#388e3c;"><i class="fas fa-flask"></i></div>
+                        <h3>Amaliy-uslubiy ko'rsatma</h3>
+                        <p>ArcGIS / QGIS bilan ishlashning bosqichma-bosqich qo'llanmasi — skrinshotlar va izohlar bilan.</p>
+                    </div>
+                    <div class="gis-card">
+                        <div class="gis-ic" style="background:#f3e5f5;color:#7b1fa2;"><i class="fas fa-pen"></i></div>
+                        <h3>Topshiriq va Test</h3>
+                        <p>Har mavzu uchun amaliy topshiriq va bilimni mustahkamlovchi interaktiv test savollari.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Qanday ishlaydi -->
+            <section class="section">
+                <h2 class="section-title">Qanday ishlaydi?</h2>
+                <div class="gis-steps">
+                    <div class="gis-step">
+                        <span class="gis-step-num">1</span>
+                        <div><h4>Mavzuni tanlang</h4><p>“Ma'ruzalar” bo'limidan kerakli mavzuni oching.</p></div>
+                    </div>
+                    <div class="gis-step">
+                        <span class="gis-step-num">2</span>
+                        <div><h4>Nazariy va taqdimot</h4><p>Nazariy qismni o'qing, taqdimot slaydlarini ko'ring.</p></div>
+                    </div>
+                    <div class="gis-step">
+                        <span class="gis-step-num">3</span>
+                        <div><h4>Amaliyotni bajaring</h4><p>Uslubiy ko'rsatma bo'yicha ArcGIS/QGIS da topshiriqni bajaring.</p></div>
+                    </div>
+                    <div class="gis-step">
+                        <span class="gis-step-num">4</span>
+                        <div><h4>Testdan o'ting</h4><p>Mavzu testini yeching va natijangizni statistikada kuzating.</p></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sahifalar -->
+            <section class="section">
+                <h2 class="section-title">Sayt bo'limlari</h2>
+                <div class="gis-nav-grid">
+                    <a href="{% url 'darslar' %}" class="gis-nav-card">
+                        <i class="fas fa-book"></i>
+                        <div><strong>Ma'ruzalar</strong><span>Barcha mavzular: nazariy, taqdimot, amaliy va test.</span></div>
                     </a>
-                    {% endif %}
-                </div>
-                <div class="darslar-grid">
-                    {% for mavzu in mavzular %}
-                    <div class="dars-card tc-card">
-                        <a href="{% url 'topshiriqlar' %}" class="tc-body">
-                            <div class="dars-card-top">
-                                <div class="dars-card-subj">
-                                    <span class="dars-icon" style="background:{{ mavzu.rang|default:'#f3f4f6' }};"></span>
-                                    Mavzu {{ mavzu.raqam }}
-                                </div>
-                                <span class="dars-badge done">Fan</span>
-                            </div>
-                            <h3 class="dars-card-title">{{ mavzu.nomi }}</h3>
-                            <p class="dars-card-desc">{{ mavzu.tavsif }}</p>
-                            <div class="dars-card-info">
-                                <span>Mavzu</span>
-                                <span>Matematika</span>
-                            </div>
-                            <div class="dars-card-bottom">
-                                <span class="dars-card-meta"><i class="fas fa-clipboard-list"></i> Topshiriqlar</span>
-                                <span class="dars-card-btn">Boshlash <i class="fas fa-arrow-right"></i></span>
-                            </div>
-                        </a>
-                        {% if request.user.is_authenticated and request.user.profil.rol == 'oqituvchi' %}
-                        <div class="tc-actions">
-                            <a href="{% url 'oqituvchi_mavzu_tahrirlash' mavzu.pk %}" class="tc-btn tc-blue" title="Tahrirlash"><i class="fas fa-pen"></i></a>
-                            <form method="post" action="{% url 'oqituvchi_mavzu_ochirish' mavzu.pk %}" onsubmit="return confirm('Mavzuni o\'chirmoqchimisiz?')" style="margin:0;">
-                                {% csrf_token %}<button type="submit" class="tc-btn tc-red" title="O'chirish"><i class="fas fa-trash"></i></button>
-                            </form>
-                        </div>
-                        {% endif %}
-                    </div>
-                    {% endfor %}
-                </div>
-            </section>
-
-            <!-- Kuchsiz sohalar -->
-            <section class="section">
-                <h2 class="section-title">Kuchsiz sohalar</h2>
-                <div class="weak-areas">
-                    {% for soha in kuchsiz_sohalar %}
-                    <div class="weak-card">
-                        <div class="weak-header">
-                            <span class="weak-name">{{ soha.nomi }}</span>
-                            <span class="weak-percent">{{ soha.foiz }}%</span>
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: {{ soha.foiz }}%; background: {{ soha.rang }}"></div>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-            </section>
-
-            <!-- Musobaqalar -->
-            <section class="section">
-                <div class="musobaqa-banner">
-                    <div class="musobaqa-banner-text">
-                        <span class="musobaqa-badge">&#127942; Musobaqa</span>
-                        <h2>Do'stlar bilan bellashing!</h2>
-                        <p>O'yinlarni tanlang, raqiblarga qarshi bellashing va reyting jadvalida o'z o'rningizni egallang</p>
-                        <a href="#" class="btn-primary">Qatnashish</a>
-                    </div>
-                    <div class="musobaqa-banner-img">
-                        <img src="{% static 'images/musobaqa.svg' %}" alt="Musobaqa">
-                    </div>
-                </div>
-
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-                    <h2 class="section-title" style="margin-bottom:0;">O'yinlarni tanlang</h2>
-                    {% if request.user.is_authenticated and request.user.profil.rol == 'oqituvchi' %}
-                    <a href="{% url 'oqituvchi_musobaqa_qoshish' %}" class="btn-primary" style="border:none; cursor:pointer; text-decoration:none; font-size:13px;">
-                        <i class="fas fa-plus"></i> Yangi musobaqa
+                    <a href="{% url 'topshiriqlar' %}" class="gis-nav-card">
+                        <i class="fas fa-clipboard-list"></i>
+                        <div><strong>Amaliyotlar</strong><span>Topshiriqlar va testlar ro'yxati.</span></div>
                     </a>
-                    {% endif %}
-                </div>
-                <div class="musobaqa-grid">
-                    {% for musobaqa in musobaqalar %}
-                    <div style="position:relative;">
-                    {% if request.user.is_authenticated and request.user.profil.rol == 'oqituvchi' %}
-                    <div style="position:absolute; top:10px; right:10px; z-index:10; display:flex; gap:6px;">
-                        <a href="{% url 'oqituvchi_musobaqa_tahrirlash' musobaqa.pk %}" style="background:rgba(255,255,255,0.9); color:#2196f3; border-radius:8px; padding:4px 8px; font-size:12px; text-decoration:none;"><i class="fas fa-edit"></i></a>
-                        <form method="post" action="{% url 'oqituvchi_musobaqa_ochirish' musobaqa.pk %}" style="display:inline;" onsubmit="return confirm('Musobaqani o\'chirmoqchimisiz?')">
-                            {% csrf_token %}
-                            <button type="submit" style="background:rgba(255,255,255,0.9); color:#e91e63; border:none; border-radius:8px; padding:4px 8px; font-size:12px; cursor:pointer;"><i class="fas fa-trash"></i></button>
-                        </form>
-                    </div>
-                    {% endif %}
-                    <div class="musobaqa-card" style="background: {{ musobaqa.rang }}">
-                        <div class="musobaqa-icon">{{ musobaqa.icon }}</div>
-                        <h3>{{ musobaqa.nomi }}</h3>
-                        <p>{{ musobaqa.tavsif }}</p>
-                        <div class="musobaqa-meta">
-                            <span class="musobaqa-players">
-                                <i class="fas fa-users"></i> {{ musobaqa.qatnashchilar }}
-                            </span>
-                            <span class="musobaqa-level">{{ musobaqa.daraja }}</span>
-                        </div>
-                        <a href="{% url 'musobaqa_detail' musobaqa.pk %}" class="musobaqa-btn">Boshlash</a>
-                    </div>
-                    </div>
-                    {% endfor %}
-                </div>
-
-                <h2 class="section-title">Reyting jadvali</h2>
-                <div class="reyting-table">
-                    {% for player in reyting %}
-                    <div class="reyting-row {% if forloop.first %}reyting-first{% endif %}">
-                        <span class="reyting-rank">{{ forloop.counter }}</span>
-                        <span class="reyting-medal">{{ player.medal }}</span>
-                        <div class="reyting-avatar">
-                            <i class="fas fa-user"></i>
-                        </div>
-                        <span class="reyting-name">{{ player.ism }}</span>
-                        <span class="reyting-score">{{ player.ball }} ball</span>
-                    </div>
-                    {% endfor %}
+                    <a href="{% url 'statistika' %}" class="gis-nav-card">
+                        <i class="fas fa-chart-bar"></i>
+                        <div><strong>Statistika</strong><span>Test natijalari va o'zlashtirish ko'rsatkichlari.</span></div>
+                    </a>
+                    <a href="{% url 'yutuqlar' %}" class="gis-nav-card">
+                        <i class="fas fa-trophy"></i>
+                        <div><strong>Yutuqlar</strong><span>Erishilgan natijalar va mukofotlar.</span></div>
+                    </a>
+                    <a href="{% url 'sozlamalar' %}" class="gis-nav-card">
+                        <i class="fas fa-cog"></i>
+                        <div><strong>Sozlamalar</strong><span>Profil va hisob sozlamalari.</span></div>
+                    </a>
                 </div>
             </section>
+
+<style>
+.gis-hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.18);color:#fff;padding:6px 14px;border-radius:999px;font-size:13px;font-weight:600;margin-bottom:14px}
+.gis-hero-icon{display:flex;align-items:center;justify-content:center;font-size:120px;color:rgba(255,255,255,.85)}
+.gis-lead{color:#6b7280;margin:-6px 0 16px}
+.gis-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.gis-stat{background:#fff;border:1px solid #eef0f3;border-radius:14px;padding:18px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+.gis-stat-num{display:block;font-size:30px;font-weight:800;color:#1a936f;line-height:1}
+.gis-stat-lbl{display:block;margin-top:6px;color:#6b7280;font-size:13px;font-weight:600}
+.gis-cards{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.gis-card{background:#fff;border:1px solid #eef0f3;border-radius:16px;padding:20px;box-shadow:0 2px 10px rgba(0,0,0,.05)}
+.gis-card h3{margin:12px 0 6px;font-size:17px;color:#111827}
+.gis-card p{color:#6b7280;font-size:14px;line-height:1.55;margin:0}
+.gis-ic{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px}
+.gis-steps{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.gis-step{display:flex;gap:14px;align-items:flex-start;background:#fff;border:1px solid #eef0f3;border-radius:14px;padding:16px 18px}
+.gis-step-num{flex:0 0 auto;width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#1a936f 0%,#114b5f 100%);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700}
+.gis-step h4{margin:2px 0 4px;font-size:15px;color:#111827}
+.gis-step p{margin:0;color:#6b7280;font-size:13.5px}
+.gis-nav-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.gis-nav-card{display:flex;gap:14px;align-items:center;background:#fff;border:1px solid #eef0f3;border-radius:14px;padding:16px 18px;text-decoration:none;color:inherit;transition:.18s}
+.gis-nav-card:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(26,147,111,.15);border-color:#9fdcc7}
+.gis-nav-card i{font-size:22px;color:#1a936f;width:30px;text-align:center}
+.gis-nav-card strong{display:block;font-size:15px;color:#111827}
+.gis-nav-card span{font-size:12.5px;color:#6b7280}
+@media(max-width:860px){.gis-stats{grid-template-columns:repeat(2,1fr)}.gis-cards,.gis-steps,.gis-nav-grid{grid-template-columns:1fr}.gis-hero-icon{font-size:64px}}
+</style>
 {% endblock %}

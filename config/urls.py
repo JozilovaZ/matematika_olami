@@ -1,12 +1,17 @@
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, re_path
+from django.views.static import serve as _media_serve
+from django.conf import settings
 from apps import views
 
 urlpatterns = [
+    re_path(r'^media/(?P<path>.*)$', _media_serve, {'document_root': settings.MEDIA_ROOT}),
     path('admin/', admin.site.urls),
     path('', views.bosh_sahifa, name='bosh_sahifa'),
     path('darslar/', views.darslar, name='darslar'),
     path('darslar/<int:pk>/', views.dars_detail, name='dars_detail'),
+    path('taqdimotlar/', views.taqdimotlar, name='taqdimotlar'),
+    path('darslar/<int:pk>/taqdimot/', views.dars_taqdimot, name='dars_taqdimot'),
     path('topshiriqlar/', views.topshiriqlar, name='topshiriqlar'),
     path('topshiriqlar/<int:pk>/', views.topshiriq_detail, name='topshiriq_detail'),
     path('topshiriqlar/<int:pk>/tekshirish/', views.topshiriq_tekshirish, name='topshiriq_tekshirish'),
@@ -18,6 +23,7 @@ urlpatterns = [
     path('royxatdan-otish/', views.royxatdan_otish, name='royxatdan_otish'),
     path('kirish/', views.kirish, name='kirish'),
     path('chiqish/', views.chiqish, name='chiqish'),
+    path('oqituvchi/oquvchilar/', views.oqituvchi_oquvchilar, name='oqituvchi_oquvchilar'),
 
     # O'qituvchi CRUD
     # Kategoriyalar
