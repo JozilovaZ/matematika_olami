@@ -42,9 +42,6 @@ def royxatdan_otish(request):
         email = request.POST.get('email', '').strip()
         parol = request.POST.get('parol', '')
         parol2 = request.POST.get('parol2', '')
-        yosh = request.POST.get('yosh', '12')
-        sinf = request.POST.get('sinf', '6-sinf')
-        maktab = request.POST.get('maktab', '').strip()
 
         xatolar = []
         if not ism:
@@ -83,9 +80,6 @@ def royxatdan_otish(request):
             familiya=familiya,
             email=email,
             rol='oquvchi',
-            yosh=int(yosh) if yosh.isdigit() else 12,
-            sinf=sinf,
-            maktab=maktab,
         )
         login(request, user)
         messages.success(request, f'Xush kelibsiz, {ism}! Muvaffaqiyatli ro\'yxatdan o\'tdingiz.')
