@@ -6,3 +6,6 @@ gunicorn==21.2.0
 whitenoise==6.7.0
 python-decouple==3.8
 python-docx==1.2.0
+python-pptx==1.0.2
+Pillow==12.2.0
+XlsxWriter==3.2.9
