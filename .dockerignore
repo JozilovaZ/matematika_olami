@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Virtual environment (image ichida kerak emas)
+venv/
+env/
+ENV/
+.venv/
+
+# Ma'lumotlar bazasi (volume orqali ulanadi, image'ga kerak emas)
+data/
+*.sqlite3
+*.sqlite3.*
+
+# Media va static (volume orqali ulanadi)
+media/
+staticfiles/
+
+# Git va IDE
+.git/
+.gitignore
+.idea/
+.vscode/
+
+# Maxfiy sozlamalar
+.env
+.env.*
+
+# Eski kontent (repodan o'chirilgan, image'ga kerak emas)
+GIS masofaviy/
+
+# Claude
+.claude/
