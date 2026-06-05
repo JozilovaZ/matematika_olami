@@ -19,7 +19,13 @@ ENV/
 # Django
 *.log
 local_settings.py
-media/
+
+# Media — foydalanuvchi yuklamalari va katta fayllar git'ga qo'shilmaydi,
+# lekin gis rasmlari (taqdimot/nazariy slayd rasmlari) serverga git orqali yetkaziladi
+media/*
+!media/gis
+media/gis/*
+!media/gis/rasmlar
 
 # Database (har bir muhitda alohida bo'ladi, git'ga qo'shilmaydi)
 *.sqlite3
